@@ -1,0 +1,6 @@
+/backend-nestjs/node_modules
+/fontend-reactjs/node_modules
+
+
+/backend-nestjs/.env
+/fontend-reactjs/.env
