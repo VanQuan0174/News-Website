@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import requestApi from "../../../../../helpers/api";
+import requestApi from "../../../helpers/api";
 import Swal from "sweetalert2";
 
 const CreateCategory = () => {

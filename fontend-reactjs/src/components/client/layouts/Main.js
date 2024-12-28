@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Outlet } from 'react-router-dom'; // Import Outlet từ react-router-dom
-import Header from './layouts/Header';
-import Nav from './layouts/Nav';
-import Footer from './layouts/Footer';
-import NewsTicker from './layouts/NewsTicker';
+import Header from './components/Header/Header';
+import Nav from './components/Nav/Nav';
+import Footer from './components/Footer/Footer';
+import NewsTicker from './components/NewsTicker/NewsTicker';
 import './../../../public/assets/client/assets/styles/layout.scss';
 import './../../../public/assets/client/assets/styles/styles.scss';
 

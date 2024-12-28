@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
-import Sidebar from './layouts/Sidebar';
-import Navbar from './layouts/Navbar';
+import Sidebar from '../../../components/admin/layouts/components/Sidebar/Sidebar';
+import Navbar from '../../../components/admin/layouts/components/Nav/Navbar';
 // import 'bootstrap/dist/css/bootstrap.min.css';
 
 const AdminLayout = () => {

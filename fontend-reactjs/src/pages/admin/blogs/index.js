@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import requestApi from "../../../../../helpers/api";
+import requestApi from "../../../helpers/api";
 
 const Index = () => {
     const [blogs, setBlogs] = useState([]);
@@ -58,6 +58,7 @@ const Index = () => {
                             <td>
                                 <img
                                     src={`${process.env.REACT_APP_UPLOAD_URL}/uploads/blog/${blog.image}`}
+                                    alt="image"
                                     style={{ width: '100px', height: '100px', objectFit: 'cover' }}
                                 />
                             </td>

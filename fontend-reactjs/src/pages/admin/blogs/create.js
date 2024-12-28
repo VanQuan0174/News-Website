@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"; // Thêm điều hướng
-import requestApi from "../../../../../helpers/api"; // Đường dẫn API helper
+import requestApi from "../../../helpers/api"; // Đường dẫn API helper
 
 const CreateBlog = () => {
     // State lưu danh mục
@@ -76,7 +76,7 @@ const CreateBlog = () => {
             }
 
             // Gửi dữ liệu lên backend
-            const response = await requestApi('/blogs', 'POST', formData, {
+            await requestApi('/blogs', 'POST', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },

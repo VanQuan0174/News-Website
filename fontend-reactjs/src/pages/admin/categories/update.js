@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import requestApi from '../../../../../helpers/api'; // Đường dẫn đến file API của bạn
+import requestApi from '../../../helpers/api'; // Đường dẫn đến file API của bạn
 import { useNavigate, useParams } from 'react-router-dom';
 
 const UpdateCategory = () => {

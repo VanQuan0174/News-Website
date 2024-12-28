@@ -33,7 +33,6 @@ export class BlogsService {
     const category = await this.categotiesRepository.findOne({
       where: { id: Number(categoryId) },
     });
-
     if (!category) {
       throw new NotFoundException('Danh mục không tồn tại'); // Thêm xử lý lỗi nếu danh mục không tồn tại
     }

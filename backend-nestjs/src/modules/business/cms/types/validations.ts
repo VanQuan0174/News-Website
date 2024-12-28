@@ -8,16 +8,16 @@ export const VALIDATIONS = {
     EMAIL_REQUIRED: `Email không được bỏ trống.`,
   },
 
-  PRODUCT: {
-    NAME_REQUIRED: `Tên sản phẩm không được bỏ trống`,
+  // PRODUCT: {
+  //   NAME_REQUIRED: `Tên sản phẩm không được bỏ trống`,
 
-    CODE_REQUIRED: `Mã sản phẩm không được bỏ trống`,
+  //   CODE_REQUIRED: `Mã sản phẩm không được bỏ trống`,
 
-    PRICE_IN_REQUIRED: `Giá nhập vào không được bỏ trống`,
-    PRICE_OUT_REQUIRED: `Giá bán ra không được bỏ trống`,
+  //   PRICE_IN_REQUIRED: `Giá nhập vào không được bỏ trống`,
+  //   PRICE_OUT_REQUIRED: `Giá bán ra không được bỏ trống`,
 
-    DESCRIPTION_REQUIRED: `Mô tả sản phẩm không được bỏ trống`,
-  },
+  //   DESCRIPTION_REQUIRED: `Mô tả sản phẩm không được bỏ trống`,
+  // },
 
   CATEGORY: {
     NAME_REQUIRED: `Tên danh mục không được bỏ trống`,

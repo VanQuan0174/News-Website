@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import requestApi from '../../../../../helpers/api'; /// Đường dẫn đến file requestApi.js
+import requestApi from '../../../helpers/api'; /// Đường dẫn đến file requestApi.js
 import { useNavigate } from 'react-router-dom'
 const Index = () => {
     const [users, setUsers] = useState([]); // useState lưu danh sách người dùng
@@ -60,6 +60,7 @@ const Index = () => {
                             <td>
                                 <img
                                     src={`${process.env.REACT_APP_UPLOAD_URL}/uploads/user/${user.image}`}
+                                    alt="image"
                                     style={{ width: '100px', height: '100px', objectFit: 'cover' }}
                                 />
                             </td>

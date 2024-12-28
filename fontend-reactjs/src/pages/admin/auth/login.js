@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import requestApi from '../../../../../helpers/api'; // Đường dẫn đến file API của bạn
-import './../../../../../public/assets/admin/assets/css/login.css';
+import requestApi from '../../../helpers/api'; // Đường dẫn đến file API của bạn
+import './../../../public/assets/admin/assets/css/login.css';
 import { useNavigate } from 'react-router-dom';
 
 const Login = () => {

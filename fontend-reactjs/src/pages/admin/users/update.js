@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import requestApi from '../../../../../helpers/api'; // Đường dẫn đến file API của bạn
+import requestApi from '../../../helpers/api'; // Đường dẫn đến file API của bạn
 import { useNavigate, useParams } from 'react-router-dom';
 
 const UpdateUser = () => {
@@ -33,7 +33,7 @@ const UpdateUser = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const userDataToUpdate = {
-            username: user.username 
+            username: user.username
         };
         try {
             await requestApi(`/users/${id}`, 'PUT', userDataToUpdate);

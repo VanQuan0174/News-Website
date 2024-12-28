@@ -5,7 +5,6 @@ import { UserEntity } from './database/entities/user.entity';
 import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
-import { ProductEntity } from './database/entities/product.entity';
 import { CategoryEntity } from './database/entities/category.entity';
 import { BlogEntity } from './database/entities/blog.entity';
 
@@ -18,7 +17,7 @@ import { BlogEntity } from './database/entities/blog.entity';
       username: 'root',
       password: '',
       database: 'news-website-nestjs',
-      entities: [UserEntity, ProductEntity, CategoryEntity, BlogEntity],
+      entities: [UserEntity, CategoryEntity, BlogEntity],
       synchronize: true,
     }),
     ConfigModule.forRoot({

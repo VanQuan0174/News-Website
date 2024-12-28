@@ -193,7 +193,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core_1 = __webpack_require__(4);
 const app_module_1 = __webpack_require__(5);
 const common_1 = __webpack_require__(6);
-const path_1 = __webpack_require__(53);
+const path_1 = __webpack_require__(48);
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
     app.useGlobalPipes(new common_1.ValidationPipe({
@@ -242,12 +242,11 @@ const common_1 = __webpack_require__(6);
 const cms_module_1 = __webpack_require__(7);
 const typeorm_1 = __webpack_require__(12);
 const user_entity_1 = __webpack_require__(10);
-const config_1 = __webpack_require__(36);
+const config_1 = __webpack_require__(31);
 const core_1 = __webpack_require__(4);
-const jwt_auth_guard_1 = __webpack_require__(52);
-const product_entity_1 = __webpack_require__(32);
-const category_entity_1 = __webpack_require__(42);
-const blog_entity_1 = __webpack_require__(43);
+const jwt_auth_guard_1 = __webpack_require__(47);
+const category_entity_1 = __webpack_require__(37);
+const blog_entity_1 = __webpack_require__(38);
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -261,7 +260,7 @@ exports.AppModule = AppModule = __decorate([
                 username: 'root',
                 password: '',
                 database: 'news-website-nestjs',
-                entities: [user_entity_1.UserEntity, product_entity_1.ProductEntity, category_entity_1.CategoryEntity, blog_entity_1.BlogEntity],
+                entities: [user_entity_1.UserEntity, category_entity_1.CategoryEntity, blog_entity_1.BlogEntity],
                 synchronize: true,
             }),
             config_1.ConfigModule.forRoot({
@@ -304,10 +303,9 @@ exports.CmsModule = void 0;
 const common_1 = __webpack_require__(6);
 const user_controller_1 = __webpack_require__(8);
 const auth_controller_1 = __webpack_require__(24);
-const product_controller_1 = __webpack_require__(30);
-const cms_service_module_1 = __webpack_require__(35);
-const category_controller_1 = __webpack_require__(45);
-const blog_controller_1 = __webpack_require__(48);
+const cms_service_module_1 = __webpack_require__(30);
+const category_controller_1 = __webpack_require__(40);
+const blog_controller_1 = __webpack_require__(43);
 let CmsModule = class CmsModule {
 };
 exports.CmsModule = CmsModule;
@@ -317,7 +315,6 @@ exports.CmsModule = CmsModule = __decorate([
         controllers: [
             user_controller_1.UsersController,
             auth_controller_1.AuthController,
-            product_controller_1.ProductsController,
             category_controller_1.CategoriesController,
             blog_controller_1.BlogsController,
         ],
@@ -707,13 +704,6 @@ exports.VALIDATIONS = {
         USER_NAME_REQUIRED: `Tên người dùng không được bỏ trống.`,
         EMAIL_REQUIRED: `Email không được bỏ trống.`,
     },
-    PRODUCT: {
-        NAME_REQUIRED: `Tên sản phẩm không được bỏ trống`,
-        CODE_REQUIRED: `Mã sản phẩm không được bỏ trống`,
-        PRICE_IN_REQUIRED: `Giá nhập vào không được bỏ trống`,
-        PRICE_OUT_REQUIRED: `Giá bán ra không được bỏ trống`,
-        DESCRIPTION_REQUIRED: `Mô tả sản phẩm không được bỏ trống`,
-    },
     CATEGORY: {
         NAME_REQUIRED: `Tên danh mục không được bỏ trống`,
     },
@@ -1012,377 +1002,29 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-var __param = (this && this.__param) || function (paramIndex, decorator) {
-    return function (target, key) { decorator(target, key, paramIndex); }
-};
-var _a, _b, _c;
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.ProductsController = void 0;
-const common_1 = __webpack_require__(6);
-const product_service_1 = __webpack_require__(31);
-const customize_1 = __webpack_require__(20);
-const create_product_1 = __webpack_require__(33);
-const update_product_1 = __webpack_require__(34);
-let ProductsController = class ProductsController {
-    constructor(productService) {
-        this.productService = productService;
-    }
-    findAll() {
-        return this.productService.findAll();
-    }
-    findOne(id) {
-        return this.productService.findOne(id);
-    }
-    async create(createProductDto) {
-        return await this.productService.create(createProductDto);
-    }
-    update(id, updateProductDto) {
-        return this.productService.update(id, updateProductDto);
-    }
-    remove(id) {
-        return this.productService.destroy(id);
-    }
-};
-exports.ProductsController = ProductsController;
-__decorate([
-    (0, common_1.Get)(),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
-], ProductsController.prototype, "findAll", null);
-__decorate([
-    (0, common_1.Get)(':id'),
-    __param(0, (0, common_1.Param)('id')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number]),
-    __metadata("design:returntype", void 0)
-], ProductsController.prototype, "findOne", null);
-__decorate([
-    (0, common_1.Post)(),
-    __param(0, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [typeof (_b = typeof create_product_1.CreateProductDto !== "undefined" && create_product_1.CreateProductDto) === "function" ? _b : Object]),
-    __metadata("design:returntype", Promise)
-], ProductsController.prototype, "create", null);
-__decorate([
-    (0, common_1.Put)(':id'),
-    __param(0, (0, common_1.Param)('id')),
-    __param(1, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, typeof (_c = typeof update_product_1.UpdateProductDto !== "undefined" && update_product_1.UpdateProductDto) === "function" ? _c : Object]),
-    __metadata("design:returntype", void 0)
-], ProductsController.prototype, "update", null);
-__decorate([
-    (0, common_1.Delete)(':id'),
-    __param(0, (0, common_1.Param)('id')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", void 0)
-], ProductsController.prototype, "remove", null);
-exports.ProductsController = ProductsController = __decorate([
-    (0, common_1.Controller)('products'),
-    (0, customize_1.Public)(),
-    (0, common_1.UsePipes)(new common_1.ValidationPipe({
-        exceptionFactory(validationErrors = []) {
-            const formattedErrors = validationErrors.reduce((acc, error) => {
-                acc[error.property] = Object.values(error.constraints).join(', ');
-                return acc;
-            }, {});
-            return new common_1.BadRequestException({ errors: formattedErrors });
-        },
-    })),
-    __metadata("design:paramtypes", [typeof (_a = typeof product_service_1.ProductService !== "undefined" && product_service_1.ProductService) === "function" ? _a : Object])
-], ProductsController);
-
-
-/***/ }),
-/* 31 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-"use strict";
-
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-var __param = (this && this.__param) || function (paramIndex, decorator) {
-    return function (target, key) { decorator(target, key, paramIndex); }
-};
-var _a;
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.ProductService = void 0;
-const product_entity_1 = __webpack_require__(32);
-const common_1 = __webpack_require__(6);
-const typeorm_1 = __webpack_require__(12);
-const typeorm_2 = __webpack_require__(11);
-let ProductService = class ProductService {
-    constructor(productsRepository) {
-        this.productsRepository = productsRepository;
-    }
-    async findAll() {
-        return await this.productsRepository.find();
-    }
-    async findOne(id) {
-        return await this.productsRepository.findOne({
-            where: { id: id },
-        });
-    }
-    async create(createProductDto) {
-        const { name, code, price_in, price_out, description } = createProductDto;
-        const existingProduct = await this.productsRepository.findOne({
-            where: { code },
-        });
-        if (existingProduct) {
-            throw new common_1.BadRequestException(`Sản phẩm với mã '${code}' đã tồn tại.`);
-        }
-        const newProduct = this.productsRepository.create({
-            name,
-            code,
-            price_in,
-            price_out,
-            description,
-        });
-        return this.productsRepository.save(newProduct);
-    }
-    async update(id, updateProductDto) {
-        const product = await this.productsRepository.findOne({
-            where: { id: Number(id) },
-        });
-        if (!product) {
-            throw new common_1.NotFoundException(`không tìm thấy sản phẩm với id: ${id}`);
-        }
-        Object.assign(product, updateProductDto);
-        return this.productsRepository.save(product);
-    }
-    async destroy(id) {
-        const product = await this.productsRepository.findOne({
-            where: { id: Number(id) },
-        });
-        if (!product) {
-            throw new common_1.NotFoundException(`Không tìm thấy sản phẩm với ID: ${id}`);
-        }
-        await this.productsRepository.delete(id);
-        return `Xóa thành công sản phẩm với id ${id}`;
-    }
-};
-exports.ProductService = ProductService;
-exports.ProductService = ProductService = __decorate([
-    (0, common_1.Injectable)(),
-    __param(0, (0, typeorm_1.InjectRepository)(product_entity_1.ProductEntity)),
-    __metadata("design:paramtypes", [typeof (_a = typeof typeorm_2.Repository !== "undefined" && typeorm_2.Repository) === "function" ? _a : Object])
-], ProductService);
-
-
-/***/ }),
-/* 32 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-"use strict";
-
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-var _a, _b;
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.ProductEntity = exports.TABLE_PRODUCTS = void 0;
-const typeorm_1 = __webpack_require__(11);
-exports.TABLE_PRODUCTS = 'product';
-let ProductEntity = class ProductEntity extends typeorm_1.BaseEntity {
-};
-exports.ProductEntity = ProductEntity;
-__decorate([
-    (0, typeorm_1.PrimaryGeneratedColumn)(),
-    __metadata("design:type", Number)
-], ProductEntity.prototype, "id", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ type: 'varchar', length: 250 }),
-    __metadata("design:type", String)
-], ProductEntity.prototype, "name", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ type: 'varchar', length: 50 }),
-    __metadata("design:type", String)
-], ProductEntity.prototype, "code", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ type: 'decimal', precision: 15, scale: 2 }),
-    __metadata("design:type", Number)
-], ProductEntity.prototype, "price_in", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ type: 'decimal', precision: 15, scale: 2 }),
-    __metadata("design:type", Number)
-], ProductEntity.prototype, "price_out", void 0);
-__decorate([
-    (0, typeorm_1.Column)({
-        type: 'enum',
-        enum: ['active', 'in_active'],
-        default: 'active',
-    }),
-    __metadata("design:type", String)
-], ProductEntity.prototype, "status", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ type: 'text' }),
-    __metadata("design:type", String)
-], ProductEntity.prototype, "description", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' }),
-    __metadata("design:type", typeof (_a = typeof Date !== "undefined" && Date) === "function" ? _a : Object)
-], ProductEntity.prototype, "created_at", void 0);
-__decorate([
-    (0, typeorm_1.Column)({
-        type: 'timestamp',
-        default: () => 'CURRENT_TIMESTAMP',
-        onUpdate: 'CURRENT_TIMESTAMP',
-    }),
-    __metadata("design:type", typeof (_b = typeof Date !== "undefined" && Date) === "function" ? _b : Object)
-], ProductEntity.prototype, "updated_at", void 0);
-exports.ProductEntity = ProductEntity = __decorate([
-    (0, typeorm_1.Entity)(exports.TABLE_PRODUCTS)
-], ProductEntity);
-
-
-/***/ }),
-/* 33 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-"use strict";
-
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.CreateProductDto = void 0;
-const class_validator_1 = __webpack_require__(17);
-const validations_1 = __webpack_require__(18);
-class CreateProductDto {
-}
-exports.CreateProductDto = CreateProductDto;
-__decorate([
-    (0, class_validator_1.IsNotEmpty)({ message: validations_1.VALIDATIONS.PRODUCT.NAME_REQUIRED }),
-    __metadata("design:type", String)
-], CreateProductDto.prototype, "name", void 0);
-__decorate([
-    (0, class_validator_1.IsNotEmpty)({ message: validations_1.VALIDATIONS.PRODUCT.CODE_REQUIRED }),
-    __metadata("design:type", String)
-], CreateProductDto.prototype, "code", void 0);
-__decorate([
-    (0, class_validator_1.IsNotEmpty)({ message: validations_1.VALIDATIONS.PRODUCT.PRICE_IN_REQUIRED }),
-    __metadata("design:type", Number)
-], CreateProductDto.prototype, "price_in", void 0);
-__decorate([
-    (0, class_validator_1.IsNotEmpty)({ message: validations_1.VALIDATIONS.PRODUCT.PRICE_OUT_REQUIRED }),
-    __metadata("design:type", Number)
-], CreateProductDto.prototype, "price_out", void 0);
-__decorate([
-    (0, class_validator_1.IsNotEmpty)({ message: validations_1.VALIDATIONS.PRODUCT.DESCRIPTION_REQUIRED }),
-    __metadata("design:type", String)
-], CreateProductDto.prototype, "description", void 0);
-
-
-/***/ }),
-/* 34 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-"use strict";
-
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.UpdateProductDto = void 0;
-const class_validator_1 = __webpack_require__(17);
-const validations_1 = __webpack_require__(18);
-class UpdateProductDto {
-}
-exports.UpdateProductDto = UpdateProductDto;
-__decorate([
-    (0, class_validator_1.IsNotEmpty)({ message: validations_1.VALIDATIONS.PRODUCT.NAME_REQUIRED }),
-    __metadata("design:type", String)
-], UpdateProductDto.prototype, "name", void 0);
-__decorate([
-    (0, class_validator_1.IsNotEmpty)({ message: validations_1.VALIDATIONS.PRODUCT.CODE_REQUIRED }),
-    __metadata("design:type", String)
-], UpdateProductDto.prototype, "code", void 0);
-__decorate([
-    (0, class_validator_1.IsNotEmpty)({ message: validations_1.VALIDATIONS.PRODUCT.PRICE_IN_REQUIRED }),
-    __metadata("design:type", Number)
-], UpdateProductDto.prototype, "price_in", void 0);
-__decorate([
-    (0, class_validator_1.IsNotEmpty)({ message: validations_1.VALIDATIONS.PRODUCT.PRICE_OUT_REQUIRED }),
-    __metadata("design:type", Number)
-], UpdateProductDto.prototype, "price_out", void 0);
-__decorate([
-    (0, class_validator_1.IsNotEmpty)({ message: validations_1.VALIDATIONS.PRODUCT.DESCRIPTION_REQUIRED }),
-    __metadata("design:type", String)
-], UpdateProductDto.prototype, "description", void 0);
-
-
-/***/ }),
-/* 35 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-"use strict";
-
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.CmsServiceModule = void 0;
 const common_1 = __webpack_require__(6);
 const typeorm_1 = __webpack_require__(12);
 const user_entity_1 = __webpack_require__(10);
-const product_entity_1 = __webpack_require__(32);
 const user_service_1 = __webpack_require__(9);
-const product_service_1 = __webpack_require__(31);
 const jwt_1 = __webpack_require__(26);
-const config_1 = __webpack_require__(36);
+const config_1 = __webpack_require__(31);
 const auth_service_1 = __webpack_require__(25);
 const passport_1 = __webpack_require__(28);
-const local_strategy_1 = __webpack_require__(37);
-const jwt_strategy_1 = __webpack_require__(39);
-const category_service_1 = __webpack_require__(41);
-const category_entity_1 = __webpack_require__(42);
-const blog_entity_1 = __webpack_require__(43);
-const blog_service_1 = __webpack_require__(44);
+const local_strategy_1 = __webpack_require__(32);
+const jwt_strategy_1 = __webpack_require__(34);
+const category_service_1 = __webpack_require__(36);
+const category_entity_1 = __webpack_require__(37);
+const blog_entity_1 = __webpack_require__(38);
+const blog_service_1 = __webpack_require__(39);
 let CmsServiceModule = class CmsServiceModule {
 };
 exports.CmsServiceModule = CmsServiceModule;
 exports.CmsServiceModule = CmsServiceModule = __decorate([
     (0, common_1.Module)({
         imports: [
-            typeorm_1.TypeOrmModule.forFeature([
-                user_entity_1.UserEntity,
-                product_entity_1.ProductEntity,
-                category_entity_1.CategoryEntity,
-                blog_entity_1.BlogEntity,
-            ]),
+            typeorm_1.TypeOrmModule.forFeature([user_entity_1.UserEntity, category_entity_1.CategoryEntity, blog_entity_1.BlogEntity]),
             jwt_1.JwtModule.registerAsync({
                 useFactory: async (configService) => ({
                     global: true,
@@ -1400,30 +1042,23 @@ exports.CmsServiceModule = CmsServiceModule = __decorate([
             user_service_1.UsersService,
             local_strategy_1.LocalStrategy,
             jwt_strategy_1.JwtStrategy,
-            product_service_1.ProductService,
             category_service_1.CategoriesService,
             blog_service_1.BlogsService,
         ],
-        exports: [
-            auth_service_1.AuthService,
-            user_service_1.UsersService,
-            product_service_1.ProductService,
-            category_service_1.CategoriesService,
-            blog_service_1.BlogsService,
-        ],
+        exports: [auth_service_1.AuthService, user_service_1.UsersService, category_service_1.CategoriesService, blog_service_1.BlogsService],
     })
 ], CmsServiceModule);
 
 
 /***/ }),
-/* 36 */
+/* 31 */
 /***/ ((module) => {
 
 "use strict";
 module.exports = require("@nestjs/config");
 
 /***/ }),
-/* 37 */
+/* 32 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -1440,7 +1075,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.LocalStrategy = void 0;
-const passport_local_1 = __webpack_require__(38);
+const passport_local_1 = __webpack_require__(33);
 const passport_1 = __webpack_require__(28);
 const common_1 = __webpack_require__(6);
 const auth_service_1 = __webpack_require__(25);
@@ -1465,14 +1100,14 @@ exports.LocalStrategy = LocalStrategy = __decorate([
 
 
 /***/ }),
-/* 38 */
+/* 33 */
 /***/ ((module) => {
 
 "use strict";
 module.exports = require("passport-local");
 
 /***/ }),
-/* 39 */
+/* 34 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -1489,10 +1124,10 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.JwtStrategy = void 0;
-const passport_jwt_1 = __webpack_require__(40);
+const passport_jwt_1 = __webpack_require__(35);
 const passport_1 = __webpack_require__(28);
 const common_1 = __webpack_require__(6);
-const config_1 = __webpack_require__(36);
+const config_1 = __webpack_require__(31);
 let JwtStrategy = class JwtStrategy extends (0, passport_1.PassportStrategy)(passport_jwt_1.Strategy) {
     constructor(configService) {
         super({
@@ -1514,14 +1149,14 @@ exports.JwtStrategy = JwtStrategy = __decorate([
 
 
 /***/ }),
-/* 40 */
+/* 35 */
 /***/ ((module) => {
 
 "use strict";
 module.exports = require("passport-jwt");
 
 /***/ }),
-/* 41 */
+/* 36 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -1541,7 +1176,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.CategoriesService = void 0;
-const category_entity_1 = __webpack_require__(42);
+const category_entity_1 = __webpack_require__(37);
 const common_1 = __webpack_require__(6);
 const typeorm_1 = __webpack_require__(12);
 const typeorm_2 = __webpack_require__(11);
@@ -1601,7 +1236,7 @@ exports.CategoriesService = CategoriesService = __decorate([
 
 
 /***/ }),
-/* 42 */
+/* 37 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -1619,7 +1254,7 @@ var _a, _b;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.CategoryEntity = exports.TABLE_CATEGORIS = void 0;
 const typeorm_1 = __webpack_require__(11);
-const blog_entity_1 = __webpack_require__(43);
+const blog_entity_1 = __webpack_require__(38);
 exports.TABLE_CATEGORIS = 'category';
 let CategoryEntity = class CategoryEntity extends typeorm_1.BaseEntity {
 };
@@ -1654,7 +1289,7 @@ exports.CategoryEntity = CategoryEntity = __decorate([
 
 
 /***/ }),
-/* 43 */
+/* 38 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -1672,7 +1307,7 @@ var _a, _b, _c;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.BlogEntity = exports.TABLE_BLOGS = exports.BlogType = void 0;
 const typeorm_1 = __webpack_require__(11);
-const category_entity_1 = __webpack_require__(42);
+const category_entity_1 = __webpack_require__(37);
 var BlogType;
 (function (BlogType) {
     BlogType["BLOG"] = "Blog";
@@ -1743,7 +1378,7 @@ exports.BlogEntity = BlogEntity = __decorate([
 
 
 /***/ }),
-/* 44 */
+/* 39 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -1763,8 +1398,8 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 var _a, _b;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.BlogsService = void 0;
-const blog_entity_1 = __webpack_require__(43);
-const category_entity_1 = __webpack_require__(42);
+const blog_entity_1 = __webpack_require__(38);
+const category_entity_1 = __webpack_require__(37);
 const common_1 = __webpack_require__(6);
 const typeorm_1 = __webpack_require__(12);
 const typeorm_2 = __webpack_require__(11);
@@ -1838,7 +1473,7 @@ exports.BlogsService = BlogsService = __decorate([
 
 
 /***/ }),
-/* 45 */
+/* 40 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -1859,10 +1494,10 @@ var _a, _b, _c;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.CategoriesController = void 0;
 const customize_1 = __webpack_require__(20);
-const category_service_1 = __webpack_require__(41);
+const category_service_1 = __webpack_require__(36);
 const common_1 = __webpack_require__(6);
-const create_category_1 = __webpack_require__(46);
-const update_category_1 = __webpack_require__(47);
+const create_category_1 = __webpack_require__(41);
+const update_category_1 = __webpack_require__(42);
 let CategoriesController = class CategoriesController {
     constructor(categoriesService) {
         this.categoriesService = categoriesService;
@@ -1927,7 +1562,7 @@ exports.CategoriesController = CategoriesController = __decorate([
 
 
 /***/ }),
-/* 46 */
+/* 41 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -1955,7 +1590,7 @@ __decorate([
 
 
 /***/ }),
-/* 47 */
+/* 42 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -1983,7 +1618,7 @@ __decorate([
 
 
 /***/ }),
-/* 48 */
+/* 43 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -2004,10 +1639,10 @@ var _a, _b, _c, _d, _e;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.BlogsController = void 0;
 const customize_1 = __webpack_require__(20);
-const blog_service_1 = __webpack_require__(44);
+const blog_service_1 = __webpack_require__(39);
 const common_1 = __webpack_require__(6);
-const create_blog_1 = __webpack_require__(49);
-const update_blog_1 = __webpack_require__(51);
+const create_blog_1 = __webpack_require__(44);
+const update_blog_1 = __webpack_require__(46);
 const multer_1 = __webpack_require__(22);
 const platform_express_1 = __webpack_require__(21);
 const uuid_1 = __webpack_require__(23);
@@ -2088,7 +1723,7 @@ exports.BlogsController = BlogsController = __decorate([
 
 
 /***/ }),
-/* 49 */
+/* 44 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -2107,8 +1742,8 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.CreateBlogDto = void 0;
 const class_validator_1 = __webpack_require__(17);
 const validations_1 = __webpack_require__(18);
-const blog_entity_1 = __webpack_require__(43);
-const class_transformer_1 = __webpack_require__(50);
+const blog_entity_1 = __webpack_require__(38);
+const class_transformer_1 = __webpack_require__(45);
 class CreateBlogDto {
 }
 exports.CreateBlogDto = CreateBlogDto;
@@ -2148,14 +1783,14 @@ __decorate([
 
 
 /***/ }),
-/* 50 */
+/* 45 */
 /***/ ((module) => {
 
 "use strict";
 module.exports = require("class-transformer");
 
 /***/ }),
-/* 51 */
+/* 46 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -2174,8 +1809,8 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.UpdateBlogDto = void 0;
 const class_validator_1 = __webpack_require__(17);
 const validations_1 = __webpack_require__(18);
-const blog_entity_1 = __webpack_require__(43);
-const class_transformer_1 = __webpack_require__(50);
+const blog_entity_1 = __webpack_require__(38);
+const class_transformer_1 = __webpack_require__(45);
 class UpdateBlogDto {
 }
 exports.UpdateBlogDto = UpdateBlogDto;
@@ -2215,7 +1850,7 @@ __decorate([
 
 
 /***/ }),
-/* 52 */
+/* 47 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -2266,7 +1901,7 @@ exports.JwtAuthGuard = JwtAuthGuard = __decorate([
 
 
 /***/ }),
-/* 53 */
+/* 48 */
 /***/ ((module) => {
 
 "use strict";
@@ -2334,7 +1969,7 @@ module.exports = require("path");
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	(() => {
-/******/ 		__webpack_require__.h = () => ("ce182bcc6825fd78a228")
+/******/ 		__webpack_require__.h = () => ("b763ce618e18a52cb6bf")
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */

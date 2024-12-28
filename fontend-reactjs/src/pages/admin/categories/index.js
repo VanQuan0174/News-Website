@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import requestApi from '../../../../../helpers/api'; // Đường dẫn đến file requestApi.js
+import requestApi from '../../../helpers/api'; // Đường dẫn đến file requestApi.js
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';  // Import SweetAlert2
 const Index = () => {

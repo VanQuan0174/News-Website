@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import requestApi from '../../../../../helpers/api'; // Đường dẫn đến file API của bạn
+import requestApi from '../../../helpers/api'; // Đường dẫn đến file API của bạn
 import { useNavigate } from 'react-router-dom';
 
 const CreateUser = () => {
@@ -41,7 +41,7 @@ const CreateUser = () => {
             }
 
             // Gọi API gửi dữ liệu lên backend
-            const response = await requestApi('/users', 'POST', formData, {
+            await requestApi('/users', 'POST', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data', // Đảm bảo gửi dữ liệu dưới dạng multipart/form-data
                 },
