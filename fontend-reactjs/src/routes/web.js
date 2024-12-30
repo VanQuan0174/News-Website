@@ -5,10 +5,10 @@ import CreateUser from '../pages/admin/users/create';
 import UpdateUser from '../pages/admin/users/update';
 
 
-import Home from '../resources/views/client/pages/home/home';
-import Contact from '../resources/views/client/pages/contact/contact';
-import Stiemap from '../resources/views/client/pages/stiemap/stiemap';
-import About from '../resources/views/client/pages/about/about';
+import Home from '../pages/client/home/home';
+import Contact from '../pages/client/contact/contact';
+import Stiemap from '../pages/client/stiemap/stiemap';
+import About from '../pages/client/about/about';
 import AdminLayout from './../components/admin/layouts/Main';
 import ClientLayout from '../components/client/layouts/Main';
 import ListCategory from '../pages/admin/categories/index';

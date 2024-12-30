@@ -2,6 +2,10 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"; // Thêm điều hướng
 import requestApi from "../../../helpers/api"; // Đường dẫn API helper
 
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import CustomUploadAdapter from "../../../helpers/CustomUploadAdapter";
+
 const CreateBlog = () => {
     // State lưu danh mục
     const [categories, setCategories] = useState([]);
@@ -89,6 +93,12 @@ const CreateBlog = () => {
         }
     };
 
+    function uploadPlugin(editor) {
+        editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
+            return new CustomUploadAdapter(loader);
+        };
+    }
+
     return (
         <div className="form-container">
             <form onSubmit={handleSubmit}>
@@ -135,14 +145,31 @@ const CreateBlog = () => {
 
                 <div className="mb-3">
                     <label htmlFor="content" className="form-label">Nội dung bài viết</label>
-                    <input
-                        type="text"
-                        className="form-control"
-                        id="content"
-                        name="content"
-                        value={newBlog.content}
-                        onChange={handleInputChange}
+                    <CKEditor
+                        editor={ClassicEditor}
+                        data="<p>Nhập nội dung bài viết ...</p>"
+                        config={{
+                            licenseKey: "eyJhbGciOiJFUzI1NiJ9.eyJleHAiOjE3MzY4MTI3OTksImp0aSI6ImQ1OWI5NzI2LTk1OWEtNDM0Ny1hNzFjLTY4NTFiMzBlZjdhOCIsInVzYWdlRW5kcG9pbnQiOiJodHRwczovL3Byb3h5LWV2ZW50LmNrZWRpdG9yLmNvbSIsImRpc3RyaWJ1dGlvbkNoYW5uZWwiOlsiY2xvdWQiLCJkcnVwYWwiLCJzaCJdLCJ3aGl0ZUxhYmVsIjp0cnVlLCJsaWNlbnNlVHlwZSI6InRyaWFsIiwiZmVhdHVyZXMiOlsiKiJdLCJ2YyI6Ijk5MzlhNDhjIn0.uIAWOhaLBa8QSFfO3QiHtTScndTl0lgfZQfyJobTg9s3qgsTd8qOGx1mTeSK_rxwuWXYQAgI5OOIDVVLpd9lSA",
+                            extraPlugins: [uploadPlugin],
+                        }}
+                        onReady={editor => {
+                            console.log('Editor is ready to use', editor);
+                        }}
+                        onChange={(event, editor) => {
+                            const data = editor.getData();
+                            setNewBlog(prevBlog => ({
+                                ...prevBlog,
+                                content: data
+                            }));
+                        }}
+                        onBlur={(event, editor) => {
+                            console.log('Blur.', editor);
+                        }}
+                        onFocus={(event, editor) => {
+                            console.log('Focus.', editor);
+                        }}
                     />
+
                 </div>
 
                 <div className="mb-3">

@@ -63,4 +63,25 @@ export class BlogsController {
   async update(@Param('id') id: number, @Body() updateBlogDto: UpdateBlogDto) {
     return this.blogsService.update(id, updateBlogDto);
   }
+
+  @Post('create-content-image')
+  @UseInterceptors(
+    FileInterceptor('image', {
+      storage: diskStorage({
+        destination: './uploads/blog/content', // Nơi lưu trữ ảnh
+        filename: (req, file, callback) => {
+          const filename = `${uuidv4()}-${file.originalname}`;
+          callback(null, filename); // Lưu ảnh với tên duy nhất
+        },
+      }),
+    }),
+  )
+  async createPostImage(
+    @Body() data: any,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    return {
+      url: `uploads/blog/content/${file.filename}`,
+    };
+  }
 }

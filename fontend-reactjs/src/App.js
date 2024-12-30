@@ -1,13 +1,15 @@
 import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { AuthProvider } from './AuthContext';
-import RoutesList from './routes/web';
+import AdminRoutes from './routes/AdminRoutes';
+import ClientRoutes from './routes/ClientRoutes';
 
 function App() {
   return (
     <AuthProvider>
       <Router>
-        <RoutesList />
+        <AdminRoutes />
+        <ClientRoutes />
       </Router>
     </AuthProvider>
   );

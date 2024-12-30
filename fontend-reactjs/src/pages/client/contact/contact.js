@@ -1,5 +1,5 @@
 import React from 'react';
-import '../../../../../public/assets/client/assets/styles/page/contact.scss';
+import '../../../public/assets/client/assets/styles/page/contact.scss';
 function Contact() {
     return (
         <main className="main d-flex">

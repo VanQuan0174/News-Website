@@ -1,5 +1,5 @@
 import React from 'react';
-import '../../../../../public/assets/client/assets/styles/page/home.scss';
+import '../../../public/assets/client/assets/styles/page/home.scss';
 
 function Home() {
     return (

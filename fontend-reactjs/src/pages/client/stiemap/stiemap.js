@@ -1,5 +1,5 @@
 import React from 'react';
-import '../../../../../public/assets/client/assets/styles/page/stiemap.scss';
+import '../../../public/assets/client/assets/styles/page/stiemap.scss';
 
 function Stiemap() {
     return (

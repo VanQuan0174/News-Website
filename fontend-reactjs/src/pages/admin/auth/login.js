@@ -34,7 +34,7 @@ const Login = () => {
                 localStorage.setItem("access_token", data.access_token);
                 alert("Đăng nhập thành công!");
                 // Điều hướng người dùng tới trang khác sau khi đăng nhập thành công
-                navigate('/users');
+                navigate('admin/users');
             } else {
                 // Xử lý lỗi nếu không có token trả về
                 alert("Đăng nhập thất bại!");
