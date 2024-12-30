@@ -35,7 +35,7 @@ export class BlogEntity extends BaseEntity {
   @Column()
   summary: string;
 
-  @Column()
+  @Column('longtext')
   content: string;
 
   @Column({ nullable: true, default: null })

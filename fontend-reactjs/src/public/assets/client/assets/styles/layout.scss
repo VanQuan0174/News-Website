@@ -889,3 +889,20 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+//detail-blog-content
+
+.detail-blog-content .image {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  justify-content: center;
+  align-items: center;
+}
+.detail-blog-content .image img {
+  width: 100% !important;
+  height: auto !important;
+  object-fit: cover !important;
+  max-width: 627px !important;
+  max-height: 450px !important;
+}

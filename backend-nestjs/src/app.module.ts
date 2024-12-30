@@ -16,7 +16,7 @@ import { BlogEntity } from './database/entities/blog.entity';
       port: 3306,
       username: 'root',
       password: '',
-      database: 'news-website-nestjs',
+      database: 'news-website',
       entities: [UserEntity, CategoryEntity, BlogEntity],
       synchronize: true,
     }),

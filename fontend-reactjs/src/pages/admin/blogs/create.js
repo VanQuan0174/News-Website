@@ -71,7 +71,7 @@ const CreateBlog = () => {
             formData.append('title', newBlog.title);
             formData.append('type', newBlog.type);
             formData.append('summary', newBlog.summary);
-            formData.append('content', newBlog.content);
+            formData.append('content', newBlog.content);  // Đảm bảo content được thêm vào formData
             formData.append('categoryId', newBlog.categoryId);
             formData.append('priority', newBlog.priority);
 
@@ -169,7 +169,6 @@ const CreateBlog = () => {
                             console.log('Focus.', editor);
                         }}
                     />
-
                 </div>
 
                 <div className="mb-3">
@@ -223,6 +222,5 @@ const CreateBlog = () => {
         </div>
     );
 };
-//check git
 
 export default CreateBlog;

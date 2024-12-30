@@ -193,7 +193,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core_1 = __webpack_require__(4);
 const app_module_1 = __webpack_require__(5);
 const common_1 = __webpack_require__(6);
-const path_1 = __webpack_require__(45);
+const path_1 = __webpack_require__(48);
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
     app.useGlobalPipes(new common_1.ValidationPipe({
@@ -244,7 +244,7 @@ const typeorm_1 = __webpack_require__(12);
 const user_entity_1 = __webpack_require__(10);
 const config_1 = __webpack_require__(31);
 const core_1 = __webpack_require__(4);
-const jwt_auth_guard_1 = __webpack_require__(44);
+const jwt_auth_guard_1 = __webpack_require__(47);
 const category_entity_1 = __webpack_require__(37);
 const blog_entity_1 = __webpack_require__(38);
 let AppModule = class AppModule {
@@ -259,7 +259,7 @@ exports.AppModule = AppModule = __decorate([
                 port: 3306,
                 username: 'root',
                 password: '',
-                database: 'news-website-nestjs',
+                database: 'news-website',
                 entities: [user_entity_1.UserEntity, category_entity_1.CategoryEntity, blog_entity_1.BlogEntity],
                 synchronize: true,
             }),
@@ -1341,7 +1341,7 @@ __decorate([
     __metadata("design:type", String)
 ], BlogEntity.prototype, "summary", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)('longtext'),
     __metadata("design:type", String)
 ], BlogEntity.prototype, "content", void 0);
 __decorate([
@@ -1641,8 +1641,8 @@ exports.BlogsController = void 0;
 const customize_1 = __webpack_require__(20);
 const blog_service_1 = __webpack_require__(39);
 const common_1 = __webpack_require__(6);
-const create_blog_1 = __webpack_require__(46);
-const update_blog_1 = __webpack_require__(48);
+const create_blog_1 = __webpack_require__(44);
+const update_blog_1 = __webpack_require__(46);
 const multer_1 = __webpack_require__(22);
 const platform_express_1 = __webpack_require__(21);
 const uuid_1 = __webpack_require__(23);
@@ -1654,7 +1654,7 @@ let BlogsController = class BlogsController {
         return this.blogsService.findAll();
     }
     findOne(id) {
-        return this.blogsService.findOne(id);
+        return this.blogsService.findOne(+id);
     }
     async create(createBlogDto, file) {
         if (file) {
@@ -1682,7 +1682,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], BlogsController.prototype, "findAll", null);
 __decorate([
-    (0, common_1.Get)('id'),
+    (0, common_1.Get)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),
@@ -1761,69 +1761,11 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.JwtAuthGuard = void 0;
-const customize_1 = __webpack_require__(20);
-const common_1 = __webpack_require__(6);
-const core_1 = __webpack_require__(4);
-const passport_1 = __webpack_require__(28);
-let JwtAuthGuard = class JwtAuthGuard extends (0, passport_1.AuthGuard)('jwt') {
-    constructor(reflector) {
-        super();
-        this.reflector = reflector;
-    }
-    canActivate(context) {
-        const isPublic = this.reflector.getAllAndOverride(customize_1.IS_PUBLIC_KEY, [
-            context.getHandler(),
-            context.getClass(),
-        ]);
-        if (isPublic) {
-            return true;
-        }
-        return super.canActivate(context);
-    }
-    handleRequest(err, user, info) {
-        if (err || !user) {
-            throw err || new common_1.UnauthorizedException('Access Token không hợp lệ');
-        }
-        return user;
-    }
-};
-exports.JwtAuthGuard = JwtAuthGuard;
-exports.JwtAuthGuard = JwtAuthGuard = __decorate([
-    (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [typeof (_a = typeof core_1.Reflector !== "undefined" && core_1.Reflector) === "function" ? _a : Object])
-], JwtAuthGuard);
-
-
-/***/ }),
-/* 45 */
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("path");
-
-/***/ }),
-/* 46 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-"use strict";
-
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-var _a;
-Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.CreateBlogDto = void 0;
 const class_validator_1 = __webpack_require__(17);
 const validations_1 = __webpack_require__(18);
 const blog_entity_1 = __webpack_require__(38);
-const class_transformer_1 = __webpack_require__(47);
+const class_transformer_1 = __webpack_require__(45);
 class CreateBlogDto {
 }
 exports.CreateBlogDto = CreateBlogDto;
@@ -1863,14 +1805,14 @@ __decorate([
 
 
 /***/ }),
-/* 47 */
+/* 45 */
 /***/ ((module) => {
 
 "use strict";
 module.exports = require("class-transformer");
 
 /***/ }),
-/* 48 */
+/* 46 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -1890,7 +1832,7 @@ exports.UpdateBlogDto = void 0;
 const class_validator_1 = __webpack_require__(17);
 const validations_1 = __webpack_require__(18);
 const blog_entity_1 = __webpack_require__(38);
-const class_transformer_1 = __webpack_require__(47);
+const class_transformer_1 = __webpack_require__(45);
 class UpdateBlogDto {
 }
 exports.UpdateBlogDto = UpdateBlogDto;
@@ -1928,6 +1870,64 @@ __decorate([
     __metadata("design:type", Number)
 ], UpdateBlogDto.prototype, "priority", void 0);
 
+
+/***/ }),
+/* 47 */
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var _a;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.JwtAuthGuard = void 0;
+const customize_1 = __webpack_require__(20);
+const common_1 = __webpack_require__(6);
+const core_1 = __webpack_require__(4);
+const passport_1 = __webpack_require__(28);
+let JwtAuthGuard = class JwtAuthGuard extends (0, passport_1.AuthGuard)('jwt') {
+    constructor(reflector) {
+        super();
+        this.reflector = reflector;
+    }
+    canActivate(context) {
+        const isPublic = this.reflector.getAllAndOverride(customize_1.IS_PUBLIC_KEY, [
+            context.getHandler(),
+            context.getClass(),
+        ]);
+        if (isPublic) {
+            return true;
+        }
+        return super.canActivate(context);
+    }
+    handleRequest(err, user, info) {
+        if (err || !user) {
+            throw err || new common_1.UnauthorizedException('Access Token không hợp lệ');
+        }
+        return user;
+    }
+};
+exports.JwtAuthGuard = JwtAuthGuard;
+exports.JwtAuthGuard = JwtAuthGuard = __decorate([
+    (0, common_1.Injectable)(),
+    __metadata("design:paramtypes", [typeof (_a = typeof core_1.Reflector !== "undefined" && core_1.Reflector) === "function" ? _a : Object])
+], JwtAuthGuard);
+
+
+/***/ }),
+/* 48 */
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("path");
 
 /***/ })
 /******/ 	]);
@@ -1991,7 +1991,7 @@ __decorate([
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	(() => {
-/******/ 		__webpack_require__.h = () => ("38b802f692f18ea86f94")
+/******/ 		__webpack_require__.h = () => ("0bb69ca44b55bb0a80ff")
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */

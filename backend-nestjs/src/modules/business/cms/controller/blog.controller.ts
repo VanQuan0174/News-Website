@@ -26,9 +26,9 @@ export class BlogsController {
     return this.blogsService.findAll();
   }
 
-  @Get('id')
+  @Get(':id')
   findOne(@Param('id') id: number) {
-    return this.blogsService.findOne(id);
+    return this.blogsService.findOne(+id);
   }
 
   @Post()
