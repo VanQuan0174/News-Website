@@ -26,36 +26,44 @@ export class CategoriesService {
     });
   }
   async create(createCategoryDto: CreateCategoryDto): Promise<CategoryEntity> {
-    const { name } = createCategoryDto;
-    // Kiểm tra danh mục đã tồn tại chưa
-    const existingCategory = await this.categotiesRepository.findOne({
-      where: { name },
-    });
-    if (existingCategory) {
-      throw new BadRequestException(`danh mục '${name}' đã tồn tại.`);
-    }
-    const newCategory = this.categotiesRepository.create({
-      name,
+    // Kiểm tra danh mục đã tồn tại
+    const existingCategory = await this.categotiesRepository.findOneBy({
+      name: createCategoryDto.name.trim(), // Trim để tránh lỗi nhập khoảng trắng dư thừa
     });
 
-    return this.categotiesRepository.save(newCategory);
+    if (existingCategory) {
+      throw new BadRequestException(
+        `Danh mục '${createCategoryDto.name}' đã tồn tại.`,
+      );
+    }
+
+    // Tạo và lưu danh mục mới
+    const newCategory = this.categotiesRepository.create(createCategoryDto);
+    return await this.categotiesRepository.save(newCategory);
   }
   async update(
-    id: string,
+    id: number,
     updateCategoryDto: UpdateCategoryDto,
   ): Promise<string> {
-    const category = await this.categotiesRepository.findOne({
-      where: { id: Number(id) },
+    // Kiểm tra danh mục có tồn tại không
+    const category = await this.categotiesRepository.findOneBy({
+      id: Number(id),
     });
+
     if (!category) {
       throw new NotFoundException(`Không tìm thấy danh mục với id: ${id}`);
     }
+
+    // Cập nhật thông tin danh mục
     Object.assign(category, updateCategoryDto);
+
+    // Lưu thay đổi vào cơ sở dữ liệu
     await this.categotiesRepository.save(category);
-    return ` cập nhật danh mục:${id} thành công`;
+
+    return `Cập nhật danh mục với id: ${id} thành công.`;
   }
 
-  async destroy(id: string): Promise<string> {
+  async destroy(id: number): Promise<string> {
     const category = await this.categotiesRepository.findOne({
       where: { id: Number(id) },
     });

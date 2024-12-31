@@ -9,7 +9,7 @@ function DetailBlog() {
     useEffect(() => {
         const fetchDetailBlog = async () => {
             try {
-                const res = await requestApi(`/blogs/9`, 'GET'); // Gọi API với ID cố định
+                const res = await requestApi(`/blogs/15`, 'GET'); // Gọi API với ID cố định
                 setBlog(res.data); // Cập nhật state với dữ liệu từ API
             } catch (error) {
                 console.error('Lỗi khi lấy thông tin bài viết:', error);

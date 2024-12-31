@@ -5,6 +5,7 @@ import requestApi from "../../../helpers/api"; // Đường dẫn API helper
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import CustomUploadAdapter from "../../../helpers/CustomUploadAdapter";
+import Swal from "sweetalert2";
 
 const CreateBlog = () => {
     // State lưu danh mục
@@ -86,7 +87,7 @@ const CreateBlog = () => {
                 },
             });
 
-            alert('Bài viết được thêm thành công');
+            Swal.fire('Thêm thành công!', 'Bài viết đã được thêm thành công.', 'success');
             navigate('/admin/blogs');
         } catch (error) {
             alert(`Đã xảy ra lỗi: ${error.message}`);

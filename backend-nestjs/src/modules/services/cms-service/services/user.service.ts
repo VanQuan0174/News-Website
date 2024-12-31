@@ -32,31 +32,31 @@ export class UsersService {
   }
 
   async create(createUserDto: CreateUserDto): Promise<UserEntity> {
-    const { username, image, email, password } = createUserDto;
-
     // Kiểm tra email đã tồn tại
-    const isEmailExist = await this.usersRepository.findOneBy({ email });
+    const isEmailExist = await this.usersRepository.findOneBy({
+      email: createUserDto.email.trim(),
+    });
+
     if (isEmailExist) {
       throw new BadRequestException(
-        `Email đã tồn tại: ${email} - Vui lòng sử dụng email khác`,
+        `Email đã tồn tại: ${createUserDto.email} - Vui lòng sử dụng email khác`,
       );
     }
 
     // Hash password
-    const hashPassword = await hashPasswordHelper(password);
+    const hashedPassword = await hashPasswordHelper(createUserDto.password);
 
-    // Tạo đối tượng UserEntity từ dữ liệu CreateUserDto
+    // Tạo đối tượng UserEntity từ CreateUserDto
     const entity = this.usersRepository.create({
-      username,
-      email,
-      password: hashPassword,
-      image, // Có thể là null nếu không có ảnh
+      ...createUserDto,
+      password: hashedPassword, // Ghi đè password bằng phiên bản hash
     });
 
-    // Lưu đối tượng vào cơ sở dữ liệu và trả về kết quả đã lưu
-    return this.usersRepository.save(entity);
+    // Lưu vào cơ sở dữ liệu
+    return await this.usersRepository.save(entity);
   }
-  async update(id: string, updateUserDto: UpdateUserDto): Promise<UserEntity> {
+
+  async update(id: number, updateUserDto: UpdateUserDto): Promise<UserEntity> {
     const user = await this.usersRepository.findOneBy({ id: Number(id) });
     if (!user) {
       throw new NotFoundException(`Không tìm thấy người dùng với ID: ${id}`);
@@ -67,7 +67,7 @@ export class UsersService {
     return await this.usersRepository.save(user);
   }
   // xóa người dùng
-  async destroy(id: string): Promise<UserEntity> {
+  async destroy(id: number): Promise<UserEntity> {
     const user = await this.usersRepository.findOneBy({ id: Number(id) });
     if (!user) {
       throw new NotFoundException(`Không tìm thấy người dùng với ID: ${id}`);

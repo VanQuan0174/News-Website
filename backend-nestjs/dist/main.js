@@ -410,14 +410,14 @@ __decorate([
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, typeof (_e = typeof user_update_1.UpdateUserDto !== "undefined" && user_update_1.UpdateUserDto) === "function" ? _e : Object]),
+    __metadata("design:paramtypes", [Number, typeof (_e = typeof user_update_1.UpdateUserDto !== "undefined" && user_update_1.UpdateUserDto) === "function" ? _e : Object]),
     __metadata("design:returntype", void 0)
 ], UsersController.prototype, "update", null);
 __decorate([
     (0, common_1.Delete)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", void 0)
 ], UsersController.prototype, "remove", null);
 exports.UsersController = UsersController = __decorate([
@@ -467,19 +467,18 @@ let UsersService = class UsersService {
         });
     }
     async create(createUserDto) {
-        const { username, image, email, password } = createUserDto;
-        const isEmailExist = await this.usersRepository.findOneBy({ email });
-        if (isEmailExist) {
-            throw new common_1.BadRequestException(`Email đã tồn tại: ${email} - Vui lòng sử dụng email khác`);
-        }
-        const hashPassword = await (0, util_1.hashPasswordHelper)(password);
-        const entity = this.usersRepository.create({
-            username,
-            email,
-            password: hashPassword,
-            image,
+        const isEmailExist = await this.usersRepository.findOneBy({
+            email: createUserDto.email.trim(),
         });
-        return this.usersRepository.save(entity);
+        if (isEmailExist) {
+            throw new common_1.BadRequestException(`Email đã tồn tại: ${createUserDto.email} - Vui lòng sử dụng email khác`);
+        }
+        const hashedPassword = await (0, util_1.hashPasswordHelper)(createUserDto.password);
+        const entity = this.usersRepository.create({
+            ...createUserDto,
+            password: hashedPassword,
+        });
+        return await this.usersRepository.save(entity);
     }
     async update(id, updateUserDto) {
         const user = await this.usersRepository.findOneBy({ id: Number(id) });
@@ -1193,28 +1192,25 @@ let CategoriesService = class CategoriesService {
         });
     }
     async create(createCategoryDto) {
-        const { name } = createCategoryDto;
-        const existingCategory = await this.categotiesRepository.findOne({
-            where: { name },
+        const existingCategory = await this.categotiesRepository.findOneBy({
+            name: createCategoryDto.name.trim(),
         });
         if (existingCategory) {
-            throw new common_1.BadRequestException(`danh mục '${name}' đã tồn tại.`);
+            throw new common_1.BadRequestException(`Danh mục '${createCategoryDto.name}' đã tồn tại.`);
         }
-        const newCategory = this.categotiesRepository.create({
-            name,
-        });
-        return this.categotiesRepository.save(newCategory);
+        const newCategory = this.categotiesRepository.create(createCategoryDto);
+        return await this.categotiesRepository.save(newCategory);
     }
     async update(id, updateCategoryDto) {
-        const category = await this.categotiesRepository.findOne({
-            where: { id: Number(id) },
+        const category = await this.categotiesRepository.findOneBy({
+            id: Number(id),
         });
         if (!category) {
             throw new common_1.NotFoundException(`Không tìm thấy danh mục với id: ${id}`);
         }
         Object.assign(category, updateCategoryDto);
         await this.categotiesRepository.save(category);
-        return ` cập nhật danh mục:${id} thành công`;
+        return `Cập nhật danh mục với id: ${id} thành công.`;
     }
     async destroy(id) {
         const category = await this.categotiesRepository.findOne({
@@ -1418,21 +1414,14 @@ let BlogsService = class BlogsService {
         });
     }
     async create(createBlogDto) {
-        const { categoryId, title, summary, content, image, type, priority } = createBlogDto;
         const category = await this.categotiesRepository.findOne({
-            where: { id: Number(categoryId) },
+            where: { id: Number(createBlogDto.categoryId) },
         });
         if (!category) {
             throw new common_1.NotFoundException('Danh mục không tồn tại');
         }
         const newBlog = this.blogsRepository.create({
-            title,
-            summary,
-            content,
-            image,
-            type,
-            priority,
-            categoryId,
+            ...createBlogDto,
         });
         return this.blogsRepository.save(newBlog);
     }
@@ -1579,7 +1568,7 @@ __decorate([
     (0, common_1.Delete)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", void 0)
 ], CategoriesController.prototype, "remove", null);
 __decorate([
@@ -1587,7 +1576,7 @@ __decorate([
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, typeof (_c = typeof update_category_1.UpdateCategoryDto !== "undefined" && update_category_1.UpdateCategoryDto) === "function" ? _c : Object]),
+    __metadata("design:paramtypes", [Number, typeof (_c = typeof update_category_1.UpdateCategoryDto !== "undefined" && update_category_1.UpdateCategoryDto) === "function" ? _c : Object]),
     __metadata("design:returntype", void 0)
 ], CategoriesController.prototype, "update", null);
 exports.CategoriesController = CategoriesController = __decorate([
@@ -2027,7 +2016,7 @@ module.exports = require("path");
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	(() => {
-/******/ 		__webpack_require__.h = () => ("fff2c8f1eb4d22b48b0f")
+/******/ 		__webpack_require__.h = () => ("5b00d1f2915adb3e26f1")
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */

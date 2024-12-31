@@ -28,26 +28,18 @@ export class BlogsService {
   }
 
   async create(createBlogDto: CreateBlogDto): Promise<BlogEntity> {
-    const { categoryId, title, summary, content, image, type, priority } =
-      createBlogDto;
-
     // Tìm CategoryEntity dựa trên categoryId
     const category = await this.categotiesRepository.findOne({
-      where: { id: Number(categoryId) },
+      where: { id: Number(createBlogDto.categoryId) },
     });
+
     if (!category) {
-      throw new NotFoundException('Danh mục không tồn tại'); // Thêm xử lý lỗi nếu danh mục không tồn tại
+      throw new NotFoundException('Danh mục không tồn tại');
     }
 
-    // Tạo mới BlogEntity
+    // Tạo mới BlogEntity và gán đối tượng category vào blog
     const newBlog = this.blogsRepository.create({
-      title,
-      summary,
-      content,
-      image,
-      type,
-      priority,
-      categoryId, // Gán toàn bộ đối tượng category vào blog
+      ...createBlogDto, // Gán tất cả các trường từ createBlogDto
     });
 
     // Lưu BlogEntity vào cơ sở dữ liệu
