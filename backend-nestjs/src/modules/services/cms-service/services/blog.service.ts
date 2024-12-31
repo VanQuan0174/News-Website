@@ -5,6 +5,8 @@ import { UpdateBlogDto } from '@/modules/business/cms/dto/blog/update-blog';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { unlink } from 'fs/promises'; // Import phương thức để xóa file
+import * as path from 'path';
 
 export class BlogsService {
   constructor(
@@ -56,11 +58,57 @@ export class BlogsService {
     const blog = await this.blogsRepository.findOne({
       where: { id: Number(id) },
     });
+
     if (!blog) {
-      throw new BadRequestException(` không tìm thấy bài viết với id: ${id}`);
+      throw new BadRequestException(`Không tìm thấy bài viết với id: ${id}`);
     }
+
+    // Xóa ảnh đại diện nếu có
+    if (blog.image) {
+      const imagePath = `./uploads/blog/${blog.image}`;
+      try {
+        await unlink(imagePath);
+        console.log(`Ảnh đại diện đã được xóa: ${imagePath}`);
+      } catch (error) {
+        console.error(
+          `Lỗi khi xóa ảnh đại diện: ${imagePath} - ${error.message}`,
+        );
+      }
+    }
+
+    // Xóa các ảnh trong nội dung bài viết
+    const imagePaths = this.extractImagePaths(blog.content); // Hàm trích xuất các đường dẫn ảnh trong nội dung
+    for (const imagePath of imagePaths) {
+      const absolutePath =
+        './' + imagePath.replace('http://localhost:8080/', ''); // Chuyển đổi URL trực tiếp
+      try {
+        await unlink(absolutePath); // Xóa file
+        console.log(`Ảnh trong nội dung bài viết đã được xóa: ${absolutePath}`);
+      } catch (error) {
+        if (error.code === 'ENOENT') {
+          console.warn(`File không tồn tại, bỏ qua: ${absolutePath}`);
+        } else {
+          console.error(
+            `Lỗi khi xóa ảnh trong nội dung: ${absolutePath} - ${error.message}`,
+          );
+        }
+      }
+    }
+
+    // Xóa bài viết
     await this.blogsRepository.delete(id);
-    return `Xóa thành công bài viết id: ${id}`;
+    return `Xóa thành công bài viết với id: ${id}`;
+  }
+
+  // Trích xuất các đường dẫn ảnh từ nội dung HTML
+  private extractImagePaths(content: string): string[] {
+    const imageUrls: string[] = [];
+    const regex = /<img[^>]+src="([^">]+)"/g;
+    let match;
+    while ((match = regex.exec(content)) !== null) {
+      imageUrls.push(match[1]);
+    }
+    return imageUrls;
   }
 
   async update(id: number, updateBlogDto: UpdateBlogDto): Promise<BlogEntity> {

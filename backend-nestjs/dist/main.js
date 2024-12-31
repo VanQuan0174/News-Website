@@ -1403,6 +1403,7 @@ const category_entity_1 = __webpack_require__(37);
 const common_1 = __webpack_require__(6);
 const typeorm_1 = __webpack_require__(12);
 const typeorm_2 = __webpack_require__(11);
+const promises_1 = __webpack_require__(15);
 let BlogsService = class BlogsService {
     constructor(blogsRepository, categotiesRepository) {
         this.blogsRepository = blogsRepository;
@@ -1440,10 +1441,45 @@ let BlogsService = class BlogsService {
             where: { id: Number(id) },
         });
         if (!blog) {
-            throw new common_1.BadRequestException(` không tìm thấy bài viết với id: ${id}`);
+            throw new common_1.BadRequestException(`Không tìm thấy bài viết với id: ${id}`);
+        }
+        if (blog.image) {
+            const imagePath = `./uploads/blog/${blog.image}`;
+            try {
+                await (0, promises_1.unlink)(imagePath);
+                console.log(`Ảnh đại diện đã được xóa: ${imagePath}`);
+            }
+            catch (error) {
+                console.error(`Lỗi khi xóa ảnh đại diện: ${imagePath} - ${error.message}`);
+            }
+        }
+        const imagePaths = this.extractImagePaths(blog.content);
+        for (const imagePath of imagePaths) {
+            const absolutePath = './' + imagePath.replace('http://localhost:8080/', '');
+            try {
+                await (0, promises_1.unlink)(absolutePath);
+                console.log(`Ảnh trong nội dung bài viết đã được xóa: ${absolutePath}`);
+            }
+            catch (error) {
+                if (error.code === 'ENOENT') {
+                    console.warn(`File không tồn tại, bỏ qua: ${absolutePath}`);
+                }
+                else {
+                    console.error(`Lỗi khi xóa ảnh trong nội dung: ${absolutePath} - ${error.message}`);
+                }
+            }
         }
         await this.blogsRepository.delete(id);
-        return `Xóa thành công bài viết id: ${id}`;
+        return `Xóa thành công bài viết với id: ${id}`;
+    }
+    extractImagePaths(content) {
+        const imageUrls = [];
+        const regex = /<img[^>]+src="([^">]+)"/g;
+        let match;
+        while ((match = regex.exec(content)) !== null) {
+            imageUrls.push(match[1]);
+        }
+        return imageUrls;
     }
     async update(id, updateBlogDto) {
         const { categoryId, title, summary, content, image, type, priority } = updateBlogDto;
@@ -1991,7 +2027,7 @@ module.exports = require("path");
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	(() => {
-/******/ 		__webpack_require__.h = () => ("0bb69ca44b55bb0a80ff")
+/******/ 		__webpack_require__.h = () => ("fff2c8f1eb4d22b48b0f")
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import requestApi from "../../../helpers/api";
+import Swal from 'sweetalert2';  // Import SweetAlert2
 
 const Index = () => {
     const [blogs, setBlogs] = useState([]);
@@ -27,7 +28,30 @@ const Index = () => {
 
         fetchBlogs();
     }, []);
+    const deleteBlog = async (id) => {
+        // Hiển thị hộp thoại xác nhận với SweetAlert2
+        const result = await Swal.fire({
+            title: 'Bạn có chắc chắn muốn xóa bài viết này?',
+            text: 'Hành động này không thể hoàn tác!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Xóa',
+            cancelButtonText: 'Hủy',
+        });
 
+        if (result.isConfirmed) {
+            try {
+                await requestApi(`/blogs/${id}`, 'DELETE'); // Gọi API xóa danh mục
+                setBlogs(prevBlogs => prevBlogs.filter(blog => blog.id !== id)); // Cập nhật state bằng cách loại bỏ danh mục đã xóa
+                Swal.fire('Đã xóa!', 'Bài viết đã được xóa thành công.', 'success');
+            } catch (error) {
+                console.error('Có lỗi xảy ra khi xóa bài viết:', error);
+                Swal.fire('Lỗi!', 'Có lỗi xảy ra khi xóa bài viết.', 'error');
+            }
+        } else {
+            console.log('Xóa bài viết bị hủy');
+        }
+    }
     return (
         <div>
             <button
@@ -63,7 +87,12 @@ const Index = () => {
                                 />
                             </td>
                             <td>
-                                {/* Thêm các hành động như sửa, xóa tại đây */}
+                                <button
+                                    onClick={() => deleteBlog(blog.id)}
+                                    className="btn btn-danger me-3"
+                                >
+                                    Xóa
+                                </button>
                             </td>
                         </tr>
                     ))}

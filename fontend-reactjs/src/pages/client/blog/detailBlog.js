@@ -9,7 +9,7 @@ function DetailBlog() {
     useEffect(() => {
         const fetchDetailBlog = async () => {
             try {
-                const res = await requestApi(`/blogs/1`, 'GET'); // Gọi API với ID cố định
+                const res = await requestApi(`/blogs/9`, 'GET'); // Gọi API với ID cố định
                 setBlog(res.data); // Cập nhật state với dữ liệu từ API
             } catch (error) {
                 console.error('Lỗi khi lấy thông tin bài viết:', error);
@@ -136,8 +136,8 @@ function DetailBlog() {
                             />
                             <div className="image-caption">
                                 <a href="#">
-                                    Báo chí là kênh thông tin vô cùng quan trọng của Bác để lãnh đạo
-                                    cách mạng (Ảnh: TTXVN)
+                                    {/* Báo chí là kênh thông tin vô cùng quan trọng của Bác để lãnh đạo
+                                    cách mạng (Ảnh: TTXVN) */}
                                 </a>
                             </div>
                         </div>
