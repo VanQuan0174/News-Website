@@ -3,26 +3,25 @@ import { useNavigate } from "react-router-dom";
 import requestApi from "../../../helpers/api";
 import Swal from "sweetalert2";
 
-const CreateCategory = () => {
-    const [newCategory, setNewCategory] = useState({
-        name: '',
-    })
-
+const CreateTag = () => {
     const navigate = useNavigate();
 
+    const [newTag, setNewTag] = useState({
+        name: ''
+    })
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setNewCategory(prevCategory => ({
-            ...prevCategory,
+        setNewTag(prevTag => ({
+            ...prevTag,
             [name]: value
-        }));
+        }))
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await requestApi('/categories', 'POST', newCategory);
-            navigate('/admin/categories');
+            await requestApi('/tags', 'POST', newTag);
+            navigate('/admin/tags');
             Swal.fire('Thêm thành công!', 'Danh mục đã được thêm thành công.', 'success');
         } catch (error) {
             alert(`Đã xảy ra lỗi: ${error.message}`);
@@ -30,16 +29,16 @@ const CreateCategory = () => {
     }
     return (
         <div>
-            <h2>Thêm Danh Mục</h2>
+            <h2>Thêm Thẻ Tag</h2>
             <form onSubmit={handleSubmit}>
                 <div className="mb-3">
-                    <label htmlFor="name" className="form-label">Tên danh mục</label>
+                    <label htmlFor="name" className="form-label">Tên thẻ tag</label>
                     <input
                         type="text"
                         className="form-control"
                         id="name"
                         name="name"
-                        value={newCategory.name}
+                        value={newTag.name}
                         onChange={handleInputChange}
                     />
                 </div>
@@ -48,5 +47,4 @@ const CreateCategory = () => {
         </div>
     )
 }
-
-export default CreateCategory;
+export default CreateTag

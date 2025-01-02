@@ -11,6 +11,9 @@ import ListBlog from '../pages/admin/blogs/index';
 import CreateBlog from '../pages/admin/blogs/create';
 import Login from '../pages/admin/auth/login';
 import ProtectedRoute from '../ProtectedRoute';
+import CreateTag from '../pages/admin/tags/create';
+import ListTag from '../pages/admin/tags/index';
+
 
 const AdminRoutes = () => (
     <Routes>
@@ -19,8 +22,8 @@ const AdminRoutes = () => (
 
         {/* Đường dẫn yêu cầu đăng nhập */}
         <Route path="/admin" element={<ProtectedRoute element={<AdminLayout />} />}>
-            {/* Dashboard mặc định */}
-            <Route index element={<div>Dashboard</div>} />
+            {/* Dashboard mặc định
+            <Route index element={<div>Dashboard</div>} /> */}
 
             {/* Quản lý người dùng */}
             <Route path="users" element={<ListUser />} />
@@ -35,6 +38,11 @@ const AdminRoutes = () => (
             {/* Quản lý bài viết */}
             <Route path="blogs" element={<ListBlog />} />
             <Route path="add-blog" element={<CreateBlog />} />
+
+
+            {/* Quản lý thẻ tag của bài viết */}
+            <Route path="tags" element={<ListTag />} />
+            <Route path="add-tag" element={<CreateTag />} />
         </Route>
     </Routes>
 );

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import requestApi from '../../../helpers/api'; /// Đường dẫn đến file requestApi.js
 import { useNavigate } from 'react-router-dom'
+import Swal from 'sweetalert2';
 const Index = () => {
     const [users, setUsers] = useState([]); // useState lưu danh sách người dùng
 
@@ -19,12 +20,27 @@ const Index = () => {
 
     // Function xóa người dùng
     const deleteUser = async (id) => {
-        try {
-            await requestApi(`/users/${id}`, 'DELETE'); // Gọi API xóa người dùng
-            setUsers(prevUsers => prevUsers.filter(user => user.id !== id)); // Cập nhật state bằng cách loại bỏ người dùng đã xóa
-        } catch (error) {
-            console.error('Có lỗi xảy ra khi xóa người dùng:', error);
+        // Hiển thị hộp thoại xác nhận với SweetAlert2
+        const result = await Swal.fire({
+            title: 'Bạn có chắc chắn muốn xóa người dùng này?',
+            text: 'Hành động này không thể hoàn tác!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Xóa',
+            cancelButtonText: 'Hủy',
+        });
+        if (result.isConfirmed) {
+            try {
+                await requestApi(`/users/${id}`, 'DELETE'); // Gọi API xóa người dùng
+                setUsers(prevUsers => prevUsers.filter(user => user.id !== id)); // Cập nhật state bằng cách loại bỏ người dùng đã xóa
+                Swal.fire('Đã xóa!', 'Người dùng đã được xóa thành công')
+            } catch (error) {
+                console.error('Có lỗi xảy ra khi xóa người dùng:', error);
+            }
+        } else {
+            Swal.fire('Kết thúc', 'Xóa người dùng đã bị hủy', 'error')
         }
+
     };
 
     const navigate = useNavigate(); // Khởi tạo navigate trong component

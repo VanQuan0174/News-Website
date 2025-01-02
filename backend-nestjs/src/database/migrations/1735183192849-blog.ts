@@ -52,6 +52,16 @@ export class Blog1735183192849 implements MigrationInterface {
             type: 'int',
           },
           {
+            name: 'author', // tác giả bài viết
+            type: 'varchar',
+            length: '250',
+          },
+          {
+            name: 'source', // nguồn bài viết
+            type: 'varchar',
+            length: '250',
+          },
+          {
             name: 'created_at',
             type: 'timestamp',
             default: 'CURRENT_TIMESTAMP',

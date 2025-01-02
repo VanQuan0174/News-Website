@@ -28,6 +28,8 @@ export const VALIDATIONS = {
     TITLE_REQUIRED: `Tiêu đề bài viết không được bỏ trống`,
     CONTENT_REQUIRED: `Nội dung bài viết không được bỏ trống`,
     SUMMARY_REQUIRED: `Tóm tắt bài viết không được bỏ trống`,
+    SOURCE_REQUIRED: `Nguồn bài viết không được bỏ trống`,
+    AUTHOR_REQUIRED: `Tác giả bài viết không được bỏ trống`,
     IMAGE_REQUIRED: `ảnh bài viết không được bỏ trống`,
     TYPE_REQUIRED: `Loại bài viết không được bỏ trống`,
     PRIORITY_REQUIRED: `Mức độ ưu tiên bài viết không được bỏ trống`,

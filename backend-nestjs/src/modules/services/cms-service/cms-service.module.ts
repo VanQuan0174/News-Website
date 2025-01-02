@@ -13,6 +13,7 @@ import { CategoryEntity } from '@/database/entities/category.entity';
 import { BlogEntity } from '@/database/entities/blog.entity';
 import { BlogsService } from './services/blog.service';
 import { TagEntity } from '@/database/entities/tag.entity';
+import { TagsService } from './services/tag.service';
 
 @Module({
   imports: [
@@ -41,7 +42,14 @@ import { TagEntity } from '@/database/entities/tag.entity';
     JwtStrategy,
     CategoriesService,
     BlogsService,
+    TagsService,
   ],
-  exports: [AuthService, UsersService, CategoriesService, BlogsService],
+  exports: [
+    AuthService,
+    UsersService,
+    CategoriesService,
+    BlogsService,
+    TagsService,
+  ],
 })
 export class CmsServiceModule {}

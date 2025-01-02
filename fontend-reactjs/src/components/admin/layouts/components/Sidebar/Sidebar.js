@@ -9,6 +9,7 @@ const Sidebar = () => {
                 <li><Link to="/admin/users" style={{ color: '#fff' }}>Quản lý người dùng</Link></li>
                 <li><Link to="/admin/categories" style={{ color: '#fff' }}>Quản lý danh mục</Link></li>
                 <li><Link to="/admin/blogs" style={{ color: '#fff' }}>Quản lý bài viết</Link></li>
+                <li><Link to="/admin/tags" style={{ color: '#fff' }}>Quản lý thẻ tag</Link></li>
             </ul>
         </div>
     );

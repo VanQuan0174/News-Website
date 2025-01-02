@@ -8,7 +8,7 @@ function Contact() {
                     <div className="section__nav-list d-flex">
                         <ul>
                             <li className="text-heading">
-                                <a href="#">LIÊN HỆ VỚI CHÚNG TÔI</a>
+                                <a href="/about">LIÊN HỆ VỚI CHÚNG TÔI</a>
                             </li>
                         </ul>
                     </div>

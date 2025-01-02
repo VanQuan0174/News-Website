@@ -25,7 +25,13 @@ const CreateUser = () => {
             ...prevUser,
             image: file
         }));
+        if (file) {
+            setImagePreview(URL.createObjectURL(file));
+        }
     };
+
+    // State để hiển thị ảnh xem trước
+    const [imagePreview, setImagePreview] = useState(null);
 
     const handleSubmit = async (e) => {
         e.preventDefault(); // Ngăn chặn reload trang
@@ -108,6 +114,7 @@ const CreateUser = () => {
                         name="image"
                         onChange={handleFileChange}
                     />
+                    {imagePreview && <img src={imagePreview} alt="Preview" style={{ width: '100px', height: '100px' }} />}
                 </div>
                 <button type="submit" className="btn btn-success">Xác nhận</button>
             </form>

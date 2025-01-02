@@ -70,11 +70,12 @@ const CreateBlog = () => {
         try {
             const formData = new FormData();
             formData.append('title', newBlog.title);
-            formData.append('type', newBlog.type);
             formData.append('summary', newBlog.summary);
             formData.append('content', newBlog.content);  // Đảm bảo content được thêm vào formData
             formData.append('categoryId', newBlog.categoryId);
             formData.append('priority', newBlog.priority);
+            formData.append('author', newBlog.author);
+            formData.append('source', newBlog.source);
 
             if (newBlog.image) {
                 formData.append('image', newBlog.image);
@@ -113,23 +114,6 @@ const CreateBlog = () => {
                         value={newBlog.title}
                         onChange={handleInputChange}
                     />
-                </div>
-
-                <div className="mb-3">
-                    <label htmlFor="type" className="form-label">Loại bài viết</label>
-                    <select
-                        className="form-control"
-                        id="type"
-                        name="type"
-                        value={newBlog.type}
-                        onChange={handleInputChange}
-                    >
-                        <option value="">Chọn loại bài viết</option>
-                        <option value="Blog">BLOG</option>
-                        <option value="Tin tức">TIN_TUC</option>
-                        <option value="Hướng dẫn">HUONG_DAN</option>
-                        <option value="Đánh giá">DANH_GIA</option>
-                    </select>
                 </div>
 
                 <div className="mb-3">
@@ -191,6 +175,30 @@ const CreateBlog = () => {
                 </div>
 
                 <div className="mb-3">
+                    <label htmlFor="author" className="form-label">Tác giả bài viết</label>
+                    <input
+                        type="text"
+                        className="form-control"
+                        id="author"
+                        name="author"
+                        value={newBlog.author}
+                        onChange={handleInputChange}
+                    />
+                </div>
+
+                <div className="mb-3">
+                    <label htmlFor="source" className="form-label">Nguồn bài viết</label>
+                    <input
+                        type="text"
+                        className="form-control"
+                        id="source"
+                        name="source"
+                        value={newBlog.source}
+                        onChange={handleInputChange}
+                    />
+                </div>
+
+                <div className="mb-3">
                     <label htmlFor="priority" className="form-label">Mức độ ưu tiên bài viết</label>
                     <select
                         className="form-control"
@@ -204,6 +212,16 @@ const CreateBlog = () => {
                         <option value="2">Ưu tiên trước</option>
                         <option value="3">Ưu tiên bình thường</option>
                     </select>
+                </div>
+
+                <div className="mb-3">
+                    <label htmlFor="tags" className="form-label">Thẻ tags bài viết</label>
+                    <input
+                        type="text"
+                        className="form-control"
+                        id="tags"
+                        name="tags"
+                    />
                 </div>
 
                 <div className="mb-3">

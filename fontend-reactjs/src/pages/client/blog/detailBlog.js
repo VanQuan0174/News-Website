@@ -7,7 +7,7 @@ function DetailBlog() {
     useEffect(() => {
         const fetchDetailBlog = async () => {
             try {
-                const res = await requestApi(`/blogs/15`, 'GET'); // Gọi API với ID cố định
+                const res = await requestApi(`/blogs/1`, 'GET'); // Gọi API với ID cố định
                 setBlog(res.data); // Cập nhật state với dữ liệu từ API
             } catch (error) {
                 console.error('Lỗi khi lấy thông tin bài viết:', error);
@@ -126,23 +126,10 @@ function DetailBlog() {
                         <h2 className="news-detail__section-title title-italic">
                             {blog.summary}
                         </h2>
-                        <div className="news-detail__content-image">
-                            <img
-                                data-src="../image/news-detail/anh1.jpg"
-                                alt=">Báo chí là kênh thông tin vô cùng quan trọng"
-                                className="lazy"
-                            />
-                            <div className="image-caption">
-                                <a href="#">
-                                    {/* Báo chí là kênh thông tin vô cùng quan trọng của Bác để lãnh đạo
-                                    cách mạng (Ảnh: TTXVN) */}
-                                </a>
-                            </div>
-                        </div>
                         <div className="detail-blog-content" dangerouslySetInnerHTML={{ __html: blog.content }} />
                         <div className="news__author">
-                            <p className="author__name">Phương Dung(tổng hợp)</p>
-                            <p className="author__source">Nguồn:baotintuc.vn</p>
+                            <p className="author__name">{blog.author}(tổng hợp)</p>
+                            <p className="author__source">Nguồn: {blog.source}</p>
                         </div>
                         <div className="author__social">
                             <i className="ti-facebook" />

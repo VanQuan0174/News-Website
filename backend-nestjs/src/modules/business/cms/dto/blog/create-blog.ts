@@ -18,6 +18,12 @@ export class CreateBlogDto {
   @IsNotEmpty({ message: VALIDATIONS.BLOG.CONTENT_REQUIRED })
   content: string;
 
+  @IsNotEmpty({ message: VALIDATIONS.BLOG.AUTHOR_REQUIRED })
+  author: string;
+
+  @IsNotEmpty({ message: VALIDATIONS.BLOG.SOURCE_REQUIRED })
+  source: string;
+
   @IsOptional()
   image: string; // ảnh, nếu có
 

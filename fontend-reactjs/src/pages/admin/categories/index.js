@@ -42,7 +42,7 @@ const Index = () => {
                 Swal.fire('Lỗi!', 'Có lỗi xảy ra khi xóa danh mục.', 'error');
             }
         } else {
-            console.log('Xóa danh mục bị hủy');
+            Swal.fire('Kết thúc', 'Xóa danh mục đã bị hủy', 'error')
         }
     };
     return (

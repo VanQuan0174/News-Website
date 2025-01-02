@@ -49,7 +49,8 @@ const Index = () => {
                 Swal.fire('Lỗi!', 'Có lỗi xảy ra khi xóa bài viết.', 'error');
             }
         } else {
-            console.log('Xóa bài viết bị hủy');
+            Swal.fire('Kết thúc', 'Xóa bài viết đã bị hủy', 'error')
+
         }
     }
     return (

@@ -48,6 +48,12 @@ export class BlogEntity extends BaseEntity {
   @Column({ type: 'int' })
   priority: number; // mức độ ưu tiên của bài viết
 
+  @Column() // tác giả bài viết
+  author: string;
+
+  @Column() // nguồn bài viết
+  source: string;
+
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   created_at: Date;
 
