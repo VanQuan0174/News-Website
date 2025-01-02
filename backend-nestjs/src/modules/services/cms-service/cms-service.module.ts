@@ -12,10 +12,16 @@ import { CategoriesService } from './services/category.service';
 import { CategoryEntity } from '@/database/entities/category.entity';
 import { BlogEntity } from '@/database/entities/blog.entity';
 import { BlogsService } from './services/blog.service';
+import { TagEntity } from '@/database/entities/tag.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([UserEntity, CategoryEntity, BlogEntity]),
+    TypeOrmModule.forFeature([
+      UserEntity,
+      CategoryEntity,
+      BlogEntity,
+      TagEntity,
+    ]),
     JwtModule.registerAsync({
       useFactory: async (configService: ConfigService) => ({
         global: true,

@@ -1,6 +1,6 @@
 import { IsEnum, IsInt, IsNotEmpty, IsOptional } from 'class-validator';
 import { VALIDATIONS } from '@/modules/business/cms/types/validations';
-import { BlogType } from '@/database/entities/blog.entity';
+// import { BlogType } from '@/database/entities/blog.entity';
 import { Type } from 'class-transformer';
 
 export class UpdateBlogDto {
@@ -21,9 +21,9 @@ export class UpdateBlogDto {
   @IsOptional()
   image: string; // ảnh, nếu có
 
-  @IsEnum(BlogType)
-  @IsNotEmpty({ message: VALIDATIONS.BLOG.TYPE_REQUIRED })
-  type: BlogType;
+  // @IsEnum(BlogType)
+  // @IsNotEmpty({ message: VALIDATIONS.BLOG.TYPE_REQUIRED })
+  // type: BlogType;
 
   @IsInt()
   @Type(() => Number)

@@ -2,9 +2,7 @@ import { useEffect, useState } from "react";
 import requestApi from "../../../helpers/api";
 
 function DetailBlog() {
-    const [blog, setBlog] = useState({
-        username: '', // Thuộc tính mẫu, thay đổi tùy theo API
-    });
+    const [blog, setBlog] = useState({});
 
     useEffect(() => {
         const fetchDetailBlog = async () => {

@@ -6,7 +6,6 @@ import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { unlink } from 'fs/promises'; // Import phương thức để xóa file
-import * as path from 'path';
 
 export class BlogsService {
   constructor(
@@ -104,7 +103,7 @@ export class BlogsService {
   }
 
   async update(id: number, updateBlogDto: UpdateBlogDto): Promise<BlogEntity> {
-    const { categoryId, title, summary, content, image, type, priority } =
+    const { categoryId, title, summary, content, image, priority } =
       updateBlogDto;
 
     // Kiểm tra blog có tồn tại không

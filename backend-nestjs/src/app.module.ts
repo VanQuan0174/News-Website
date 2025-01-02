@@ -7,6 +7,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { CategoryEntity } from './database/entities/category.entity';
 import { BlogEntity } from './database/entities/blog.entity';
+import { TagEntity } from './database/entities/tag.entity';
 
 @Module({
   imports: [
@@ -17,7 +18,7 @@ import { BlogEntity } from './database/entities/blog.entity';
       username: 'root',
       password: '',
       database: 'news-website',
-      entities: [UserEntity, CategoryEntity, BlogEntity],
+      entities: [UserEntity, CategoryEntity, BlogEntity, TagEntity],
       synchronize: true,
     }),
     ConfigModule.forRoot({

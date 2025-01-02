@@ -41,12 +41,12 @@ export class Blog1735183192849 implements MigrationInterface {
             type: 'varchar',
             length: '250',
           },
-          {
-            name: 'type', // loại bài viết
-            type: 'enum',
-            enum: ['Blog', 'Tin tức', 'Hướng dẫn', 'Đánh giá'],
-            default: `'Blog'`,
-          },
+          // {
+          //   name: 'type', // loại bài viết
+          //   type: 'enum',
+          //   enum: ['Blog', 'Tin tức', 'Hướng dẫn', 'Đánh giá'],
+          //   default: `'Blog'`,
+          // },
           {
             name: 'priority', // mức độ ưu tiên
             type: 'int',

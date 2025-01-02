@@ -1,7 +1,12 @@
 /backend-nestjs/node_modules
-/backend-nestjs/dist
-/backend-nestjs/uploads
+
 /fontend-reactjs/node_modules
+
+
+/backend-nestjs/dist
+
+
+/backend-nestjs/uploads
 
 
 /backend-nestjs/.env

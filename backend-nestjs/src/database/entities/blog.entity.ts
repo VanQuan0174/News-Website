@@ -5,15 +5,11 @@ import {
   BaseEntity,
   ManyToOne,
   JoinColumn,
+  ManyToMany,
+  JoinTable,
 } from 'typeorm';
 import { CategoryEntity } from './category.entity';
-
-export enum BlogType {
-  BLOG = 'Blog',
-  TIN_TUC = 'Tin tức',
-  HUONG_DAN = 'Hướng dẫn',
-  DANH_GIA = 'Đánh giá',
-}
+import { TagEntity } from './tag.entity';
 
 export const TABLE_BLOGS = 'blog';
 @Entity(TABLE_BLOGS)
@@ -26,30 +22,31 @@ export class BlogEntity extends BaseEntity {
   @JoinColumn({ name: 'categoryId' }) // Chỉ định chính xác tên cột
   category: CategoryEntity;
 
-  @Column()
+  @ManyToMany(() => TagEntity, (tag) => tag.blogs) // Sử dụng đúng mối quan hệ "blogs"
+  @JoinTable({
+    name: 'blog_tag', // Bảng trung gian giữa Blog và Tag
+    joinColumn: { name: 'blogId', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'tagId', referencedColumnName: 'id' },
+  })
+  tags: TagEntity[]; // Quan hệ với tags
+
+  @Column() // danh mục bìa viết
   categoryId: number;
 
-  @Column()
+  @Column() // tiêu đề của bài viết
   title: string;
 
-  @Column()
+  @Column() // tóm tắt bài viết
   summary: string;
 
   @Column('longtext')
-  content: string;
+  content: string; // nội dung bài viết
 
   @Column({ nullable: true, default: null })
-  image: string;
-
-  @Column({
-    type: 'enum', // Định nghĩa kiểu enum cho cột type
-    enum: BlogType, // Liệt kê các giá trị hợp lệ cho enum
-    default: BlogType.BLOG, // Mặc định là 'Blog' nếu không có giá trị
-  })
-  type: string;
+  image: string; // ảnh đại diện cho bài viết
 
   @Column({ type: 'int' })
-  priority: number;
+  priority: number; // mức độ ưu tiên của bài viết
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   created_at: Date;
