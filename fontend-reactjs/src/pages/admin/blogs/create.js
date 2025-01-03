@@ -8,8 +8,10 @@ import CustomUploadAdapter from "../../../helpers/CustomUploadAdapter";
 import Swal from "sweetalert2";
 
 const CreateBlog = () => {
-    // State lưu danh mục
-    const [categories, setCategories] = useState([]);
+
+
+    // Hook để điều hướng sau khi tạo thành công
+    const navigate = useNavigate();
 
     // State lưu thông tin bài viết mới
     const [newBlog, setNewBlog] = useState({
@@ -24,8 +26,8 @@ const CreateBlog = () => {
     // State để hiển thị ảnh xem trước
     const [imagePreview, setImagePreview] = useState(null);
 
-    // Hook để điều hướng sau khi tạo thành công
-    const navigate = useNavigate();
+    // State lưu danh mục
+    const [categories, setCategories] = useState([]);
 
     // Lấy danh sách danh mục từ API
     useEffect(() => {
@@ -40,6 +42,20 @@ const CreateBlog = () => {
 
         fetchCategories();
     }, []);
+
+    const [tags, setTags] = useState([]);
+    useEffect(() => {
+        const fetchTags = async () => {
+            try {
+                const res = await requestApi('/tags', 'GET');
+                setTags(res.data);
+            } catch (error) {
+                console.error('lỗi khi lấy danh sách tag', error);
+            }
+        }
+        fetchTags();
+    }, []);
+
 
     // Xử lý khi thay đổi dữ liệu input
     const handleInputChange = (e) => {
@@ -61,6 +77,16 @@ const CreateBlog = () => {
             setImagePreview(URL.createObjectURL(file));
         }
     };
+
+    // const handleTagChange = (tagId) => {
+    //     tags((prevSelectedTags) => {
+    //         if (prevSelectedTags.includes(tagId)) {
+    //             return prevSelectedTags.filter((id) => id !== tagId);
+    //         } else {
+    //             return [...prevSelectedTags, tagId];
+    //         }
+    //     });
+    // };
 
     // Xử lý khi gửi form
     const handleSubmit = async (e) => {
@@ -213,16 +239,6 @@ const CreateBlog = () => {
                     </select>
                 </div>
 
-                {/* <div className="mb-3">
-                    <label htmlFor="tags" className="form-label">Thẻ tags bài viết</label>
-                    <input
-                        type="text"
-                        className="form-control"
-                        id="tags"
-                        name="tags"
-                    />
-                </div> */}
-
                 <div className="mb-3">
                     <label htmlFor="image" className="form-label">Ảnh bài viết</label>
                     <input
@@ -234,6 +250,23 @@ const CreateBlog = () => {
                     />
                     {imagePreview && <img src={imagePreview} alt="Preview" style={{ width: '100px', height: '100px' }} />}
                 </div>
+
+                <div className="mb-3">
+                    <label htmlFor="tags" className="form-label">Chọn thẻ tags bài viết</label>
+                    <div>
+                        {tags.map((tag) => (
+                            <div key={tag.id}>
+                                <input
+                                    type="checkbox"
+                                    id={`tag-${tag.id}`}
+                                    value={tag.id}
+                                />
+                                <label htmlFor={`tag-${tag.id}`} className="ms-2">{tag.name}</label>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
 
                 <button type="submit" className="btn btn-primary">Tạo bài viết</button>
             </form>
