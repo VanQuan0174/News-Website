@@ -14,6 +14,8 @@ import { BlogEntity } from '@/database/entities/blog.entity';
 import { BlogsService } from './services/blog.service';
 import { TagEntity } from '@/database/entities/tag.entity';
 import { TagsService } from './services/tag.service';
+import { BlogTagEntity } from '@/database/entities/blog-tag.entity';
+import { BlogTagService } from './services/blog-tag.service';
 
 @Module({
   imports: [
@@ -22,6 +24,7 @@ import { TagsService } from './services/tag.service';
       CategoryEntity,
       BlogEntity,
       TagEntity,
+      BlogTagEntity,
     ]),
     JwtModule.registerAsync({
       useFactory: async (configService: ConfigService) => ({
@@ -43,6 +46,7 @@ import { TagsService } from './services/tag.service';
     CategoriesService,
     BlogsService,
     TagsService,
+    BlogTagService,
   ],
   exports: [
     AuthService,
@@ -50,6 +54,7 @@ import { TagsService } from './services/tag.service';
     CategoriesService,
     BlogsService,
     TagsService,
+    BlogTagService,
   ],
 })
 export class CmsServiceModule {}

@@ -67,7 +67,6 @@ const Index = () => {
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Tiêu đề bài viết</th>
-                        <th scope="col">Loại</th>
                         <th scope="col">Danh mục</th>
                         <th scope="col">Image</th>
                         <th scope="col">Hành động</th>
@@ -78,7 +77,6 @@ const Index = () => {
                         <tr key={blog.id}>
                             <td>{index + 1}</td>
                             <td>{blog.title}</td>
-                            <td>{blog.type}</td>
                             <td>{blog.categoryName || 'Chưa xác định'}</td> {/* Hiển thị tên danh mục từ state */}
                             <td>
                                 <img
@@ -88,6 +86,12 @@ const Index = () => {
                                 />
                             </td>
                             <td>
+                                <button
+                                    className="btn btn-sm btn-warning me-2"
+                                    onClick={() => navigate(`/admin/update-blog/${blog.id}`)}
+                                >
+                                    Sửa
+                                </button>
                                 <button
                                     onClick={() => deleteBlog(blog.id)}
                                     className="btn btn-danger me-3"

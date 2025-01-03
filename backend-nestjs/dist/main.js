@@ -193,7 +193,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core_1 = __webpack_require__(4);
 const app_module_1 = __webpack_require__(5);
 const common_1 = __webpack_require__(6);
-const path_1 = __webpack_require__(52);
+const path_1 = __webpack_require__(54);
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
     app.useGlobalPipes(new common_1.ValidationPipe({
@@ -244,10 +244,11 @@ const typeorm_1 = __webpack_require__(12);
 const user_entity_1 = __webpack_require__(10);
 const config_1 = __webpack_require__(31);
 const core_1 = __webpack_require__(4);
-const jwt_auth_guard_1 = __webpack_require__(51);
+const jwt_auth_guard_1 = __webpack_require__(53);
 const category_entity_1 = __webpack_require__(37);
 const blog_entity_1 = __webpack_require__(38);
 const tag_entity_1 = __webpack_require__(39);
+const blog_tag_entity_1 = __webpack_require__(41);
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -261,7 +262,13 @@ exports.AppModule = AppModule = __decorate([
                 username: 'root',
                 password: '',
                 database: 'news-website',
-                entities: [user_entity_1.UserEntity, category_entity_1.CategoryEntity, blog_entity_1.BlogEntity, tag_entity_1.TagEntity],
+                entities: [
+                    user_entity_1.UserEntity,
+                    category_entity_1.CategoryEntity,
+                    blog_entity_1.BlogEntity,
+                    tag_entity_1.TagEntity,
+                    blog_tag_entity_1.BlogTagEntity,
+                ],
                 synchronize: true,
             }),
             config_1.ConfigModule.forRoot({
@@ -305,9 +312,9 @@ const common_1 = __webpack_require__(6);
 const user_controller_1 = __webpack_require__(8);
 const auth_controller_1 = __webpack_require__(24);
 const cms_service_module_1 = __webpack_require__(30);
-const category_controller_1 = __webpack_require__(42);
-const blog_controller_1 = __webpack_require__(45);
-const tag_controller_1 = __webpack_require__(49);
+const category_controller_1 = __webpack_require__(44);
+const blog_controller_1 = __webpack_require__(47);
+const tag_controller_1 = __webpack_require__(51);
 let CmsModule = class CmsModule {
 };
 exports.CmsModule = CmsModule;
@@ -1023,7 +1030,9 @@ const category_entity_1 = __webpack_require__(37);
 const blog_entity_1 = __webpack_require__(38);
 const blog_service_1 = __webpack_require__(40);
 const tag_entity_1 = __webpack_require__(39);
-const tag_service_1 = __webpack_require__(41);
+const tag_service_1 = __webpack_require__(43);
+const blog_tag_entity_1 = __webpack_require__(41);
+const blog_tag_service_1 = __webpack_require__(42);
 let CmsServiceModule = class CmsServiceModule {
 };
 exports.CmsServiceModule = CmsServiceModule;
@@ -1035,6 +1044,7 @@ exports.CmsServiceModule = CmsServiceModule = __decorate([
                 category_entity_1.CategoryEntity,
                 blog_entity_1.BlogEntity,
                 tag_entity_1.TagEntity,
+                blog_tag_entity_1.BlogTagEntity,
             ]),
             jwt_1.JwtModule.registerAsync({
                 useFactory: async (configService) => ({
@@ -1056,6 +1066,7 @@ exports.CmsServiceModule = CmsServiceModule = __decorate([
             category_service_1.CategoriesService,
             blog_service_1.BlogsService,
             tag_service_1.TagsService,
+            blog_tag_service_1.BlogTagService,
         ],
         exports: [
             auth_service_1.AuthService,
@@ -1063,6 +1074,7 @@ exports.CmsServiceModule = CmsServiceModule = __decorate([
             category_service_1.CategoriesService,
             blog_service_1.BlogsService,
             tag_service_1.TagsService,
+            blog_tag_service_1.BlogTagService,
         ],
     })
 ], CmsServiceModule);
@@ -1453,7 +1465,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-var _a, _b;
+var _a, _b, _c, _d, _e;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.BlogsService = void 0;
 const blog_entity_1 = __webpack_require__(38);
@@ -1462,10 +1474,16 @@ const common_1 = __webpack_require__(6);
 const typeorm_1 = __webpack_require__(12);
 const typeorm_2 = __webpack_require__(11);
 const promises_1 = __webpack_require__(15);
+const blog_tag_entity_1 = __webpack_require__(41);
+const tag_entity_1 = __webpack_require__(39);
+const blog_tag_service_1 = __webpack_require__(42);
 let BlogsService = class BlogsService {
-    constructor(blogsRepository, categotiesRepository) {
+    constructor(blogsRepository, categotiesRepository, blogTagRepository, tagRepository, blogTagService) {
         this.blogsRepository = blogsRepository;
         this.categotiesRepository = categotiesRepository;
+        this.blogTagRepository = blogTagRepository;
+        this.tagRepository = tagRepository;
+        this.blogTagService = blogTagService;
     }
     async findAll() {
         return await this.blogsRepository.find();
@@ -1475,7 +1493,7 @@ let BlogsService = class BlogsService {
             where: { id: id },
         });
     }
-    async create(createBlogDto) {
+    async create(createBlogDto, tagIds) {
         const category = await this.categotiesRepository.findOne({
             where: { id: Number(createBlogDto.categoryId) },
         });
@@ -1485,7 +1503,15 @@ let BlogsService = class BlogsService {
         const newBlog = this.blogsRepository.create({
             ...createBlogDto,
         });
-        return this.blogsRepository.save(newBlog);
+        const savedBlog = await this.blogsRepository.save(newBlog);
+        if (tagIds && tagIds.length > 0) {
+            const tags = await this.tagRepository.findByIds(tagIds);
+            if (tags.length !== tagIds.length) {
+                throw new common_1.NotFoundException('Một số tag không tồn tại');
+            }
+            await this.blogTagService.addTagsToBlog(savedBlog.id, tagIds);
+        }
+        return savedBlog;
     }
     async destroy(id) {
         const blog = await this.blogsRepository.findOne({
@@ -1533,19 +1559,9 @@ let BlogsService = class BlogsService {
         return imageUrls;
     }
     async update(id, updateBlogDto) {
-        const { categoryId, title, summary, content, image, priority } = updateBlogDto;
         const blog = await this.blogsRepository.findOne({ where: { id } });
         if (!blog) {
             throw new common_1.NotFoundException(`Blog với ID ${id} không tồn tại`);
-        }
-        if (categoryId) {
-            const category = await this.categotiesRepository.findOne({
-                where: { id: categoryId },
-            });
-            if (!category) {
-                throw new common_1.NotFoundException(`Danh mục với ID ${categoryId} không tồn tại`);
-            }
-            blog.category = category;
         }
         Object.assign(blog, updateBlogDto);
         return this.blogsRepository.save(blog);
@@ -1555,12 +1571,97 @@ exports.BlogsService = BlogsService;
 exports.BlogsService = BlogsService = __decorate([
     __param(0, (0, typeorm_1.InjectRepository)(blog_entity_1.BlogEntity)),
     __param(1, (0, typeorm_1.InjectRepository)(category_entity_1.CategoryEntity)),
-    __metadata("design:paramtypes", [typeof (_a = typeof typeorm_2.Repository !== "undefined" && typeorm_2.Repository) === "function" ? _a : Object, typeof (_b = typeof typeorm_2.Repository !== "undefined" && typeorm_2.Repository) === "function" ? _b : Object])
+    __param(2, (0, typeorm_1.InjectRepository)(blog_tag_entity_1.BlogTagEntity)),
+    __param(3, (0, typeorm_1.InjectRepository)(tag_entity_1.TagEntity)),
+    __metadata("design:paramtypes", [typeof (_a = typeof typeorm_2.Repository !== "undefined" && typeorm_2.Repository) === "function" ? _a : Object, typeof (_b = typeof typeorm_2.Repository !== "undefined" && typeorm_2.Repository) === "function" ? _b : Object, typeof (_c = typeof typeorm_2.Repository !== "undefined" && typeorm_2.Repository) === "function" ? _c : Object, typeof (_d = typeof typeorm_2.Repository !== "undefined" && typeorm_2.Repository) === "function" ? _d : Object, typeof (_e = typeof blog_tag_service_1.BlogTagService !== "undefined" && blog_tag_service_1.BlogTagService) === "function" ? _e : Object])
 ], BlogsService);
 
 
 /***/ }),
 /* 41 */
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.BlogTagEntity = exports.TABLE_BLOG_TAG = void 0;
+const typeorm_1 = __webpack_require__(11);
+exports.TABLE_BLOG_TAG = 'blog_tag';
+let BlogTagEntity = class BlogTagEntity extends typeorm_1.BaseEntity {
+};
+exports.BlogTagEntity = BlogTagEntity;
+__decorate([
+    (0, typeorm_1.PrimaryColumn)({ type: 'int' }),
+    __metadata("design:type", Number)
+], BlogTagEntity.prototype, "blogId", void 0);
+__decorate([
+    (0, typeorm_1.PrimaryColumn)({ type: 'int' }),
+    __metadata("design:type", Number)
+], BlogTagEntity.prototype, "tagId", void 0);
+exports.BlogTagEntity = BlogTagEntity = __decorate([
+    (0, typeorm_1.Entity)(exports.TABLE_BLOG_TAG)
+], BlogTagEntity);
+
+
+/***/ }),
+/* 42 */
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+var _a;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.BlogTagService = void 0;
+const blog_tag_entity_1 = __webpack_require__(41);
+const typeorm_1 = __webpack_require__(12);
+const typeorm_2 = __webpack_require__(11);
+let BlogTagService = class BlogTagService {
+    constructor(blogTagRepository) {
+        this.blogTagRepository = blogTagRepository;
+    }
+    async addTagsToBlog(blogId, tagIds) {
+        if (!Array.isArray(tagIds)) {
+            throw new Error('tagIds is not an array');
+        }
+        const blogTags = tagIds.map((tagId) => {
+            return this.blogTagRepository.create({
+                blogId,
+                tagId,
+            });
+        });
+        await this.blogTagRepository.save(blogTags);
+    }
+};
+exports.BlogTagService = BlogTagService;
+exports.BlogTagService = BlogTagService = __decorate([
+    __param(0, (0, typeorm_1.InjectRepository)(blog_tag_entity_1.BlogTagEntity)),
+    __metadata("design:paramtypes", [typeof (_a = typeof typeorm_2.Repository !== "undefined" && typeorm_2.Repository) === "function" ? _a : Object])
+], BlogTagService);
+
+
+/***/ }),
+/* 43 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -1626,7 +1727,7 @@ exports.TagsService = TagsService = __decorate([
 
 
 /***/ }),
-/* 42 */
+/* 44 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -1649,8 +1750,8 @@ exports.CategoriesController = void 0;
 const customize_1 = __webpack_require__(20);
 const category_service_1 = __webpack_require__(36);
 const common_1 = __webpack_require__(6);
-const create_category_1 = __webpack_require__(43);
-const update_category_1 = __webpack_require__(44);
+const create_category_1 = __webpack_require__(45);
+const update_category_1 = __webpack_require__(46);
 let CategoriesController = class CategoriesController {
     constructor(categoriesService) {
         this.categoriesService = categoriesService;
@@ -1715,7 +1816,7 @@ exports.CategoriesController = CategoriesController = __decorate([
 
 
 /***/ }),
-/* 43 */
+/* 45 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -1743,7 +1844,7 @@ __decorate([
 
 
 /***/ }),
-/* 44 */
+/* 46 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -1771,7 +1872,7 @@ __decorate([
 
 
 /***/ }),
-/* 45 */
+/* 47 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -1794,8 +1895,8 @@ exports.BlogsController = void 0;
 const customize_1 = __webpack_require__(20);
 const blog_service_1 = __webpack_require__(40);
 const common_1 = __webpack_require__(6);
-const create_blog_1 = __webpack_require__(46);
-const update_blog_1 = __webpack_require__(48);
+const create_blog_1 = __webpack_require__(48);
+const update_blog_1 = __webpack_require__(50);
 const multer_1 = __webpack_require__(22);
 const platform_express_1 = __webpack_require__(21);
 const uuid_1 = __webpack_require__(23);
@@ -1809,11 +1910,11 @@ let BlogsController = class BlogsController {
     findOne(id) {
         return this.blogsService.findOne(+id);
     }
-    async create(createBlogDto, file) {
+    async create(createBlogDto, tagIds, file) {
         if (file) {
             createBlogDto.image = file.filename;
         }
-        return await this.blogsService.create(createBlogDto);
+        return await this.blogsService.create(createBlogDto, tagIds);
     }
     remove(id) {
         return this.blogsService.destroy(id);
@@ -1853,9 +1954,10 @@ __decorate([
         }),
     })),
     __param(0, (0, common_1.Body)()),
-    __param(1, (0, common_1.UploadedFile)()),
+    __param(1, (0, common_1.Body)('tagIds')),
+    __param(2, (0, common_1.UploadedFile)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [typeof (_b = typeof create_blog_1.CreateBlogDto !== "undefined" && create_blog_1.CreateBlogDto) === "function" ? _b : Object, typeof (_d = typeof Express !== "undefined" && (_c = Express.Multer) !== void 0 && _c.File) === "function" ? _d : Object]),
+    __metadata("design:paramtypes", [typeof (_b = typeof create_blog_1.CreateBlogDto !== "undefined" && create_blog_1.CreateBlogDto) === "function" ? _b : Object, Array, typeof (_d = typeof Express !== "undefined" && (_c = Express.Multer) !== void 0 && _c.File) === "function" ? _d : Object]),
     __metadata("design:returntype", Promise)
 ], BlogsController.prototype, "create", null);
 __decorate([
@@ -1898,7 +2000,7 @@ exports.BlogsController = BlogsController = __decorate([
 
 
 /***/ }),
-/* 46 */
+/* 48 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -1916,7 +2018,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.CreateBlogDto = void 0;
 const class_validator_1 = __webpack_require__(17);
 const validations_1 = __webpack_require__(18);
-const class_transformer_1 = __webpack_require__(47);
+const class_transformer_1 = __webpack_require__(49);
 class CreateBlogDto {
 }
 exports.CreateBlogDto = CreateBlogDto;
@@ -1956,17 +2058,21 @@ __decorate([
     (0, class_validator_1.IsNotEmpty)({ message: validations_1.VALIDATIONS.BLOG.PRIORITY_REQUIRED }),
     __metadata("design:type", Number)
 ], CreateBlogDto.prototype, "priority", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", Array)
+], CreateBlogDto.prototype, "tagIds", void 0);
 
 
 /***/ }),
-/* 47 */
+/* 49 */
 /***/ ((module) => {
 
 "use strict";
 module.exports = require("class-transformer");
 
 /***/ }),
-/* 48 */
+/* 50 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -1984,16 +2090,9 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.UpdateBlogDto = void 0;
 const class_validator_1 = __webpack_require__(17);
 const validations_1 = __webpack_require__(18);
-const class_transformer_1 = __webpack_require__(47);
 class UpdateBlogDto {
 }
 exports.UpdateBlogDto = UpdateBlogDto;
-__decorate([
-    (0, class_validator_1.IsInt)(),
-    (0, class_transformer_1.Type)(() => Number),
-    (0, class_validator_1.IsNotEmpty)(),
-    __metadata("design:type", Number)
-], UpdateBlogDto.prototype, "categoryId", void 0);
 __decorate([
     (0, class_validator_1.IsNotEmpty)({ message: validations_1.VALIDATIONS.BLOG.TITLE_REQUIRED }),
     __metadata("design:type", String)
@@ -2007,19 +2106,17 @@ __decorate([
     __metadata("design:type", String)
 ], UpdateBlogDto.prototype, "content", void 0);
 __decorate([
-    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsNotEmpty)({ message: validations_1.VALIDATIONS.BLOG.AUTHOR_REQUIRED }),
     __metadata("design:type", String)
-], UpdateBlogDto.prototype, "image", void 0);
+], UpdateBlogDto.prototype, "author", void 0);
 __decorate([
-    (0, class_validator_1.IsInt)(),
-    (0, class_transformer_1.Type)(() => Number),
-    (0, class_validator_1.IsNotEmpty)({ message: validations_1.VALIDATIONS.BLOG.PRIORITY_REQUIRED }),
-    __metadata("design:type", Number)
-], UpdateBlogDto.prototype, "priority", void 0);
+    (0, class_validator_1.IsNotEmpty)({ message: validations_1.VALIDATIONS.BLOG.SOURCE_REQUIRED }),
+    __metadata("design:type", String)
+], UpdateBlogDto.prototype, "source", void 0);
 
 
 /***/ }),
-/* 49 */
+/* 51 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -2040,9 +2137,9 @@ var _a, _b;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TagsController = void 0;
 const customize_1 = __webpack_require__(20);
-const tag_service_1 = __webpack_require__(41);
+const tag_service_1 = __webpack_require__(43);
 const common_1 = __webpack_require__(6);
-const create_tag_1 = __webpack_require__(50);
+const create_tag_1 = __webpack_require__(52);
 let TagsController = class TagsController {
     constructor(tagsService) {
         this.tagsService = tagsService;
@@ -2096,7 +2193,7 @@ exports.TagsController = TagsController = __decorate([
 
 
 /***/ }),
-/* 50 */
+/* 52 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -2123,7 +2220,7 @@ __decorate([
 
 
 /***/ }),
-/* 51 */
+/* 53 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -2174,7 +2271,7 @@ exports.JwtAuthGuard = JwtAuthGuard = __decorate([
 
 
 /***/ }),
-/* 52 */
+/* 54 */
 /***/ ((module) => {
 
 "use strict";
@@ -2242,7 +2339,7 @@ module.exports = require("path");
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	(() => {
-/******/ 		__webpack_require__.h = () => ("9ca325833720b88d9024")
+/******/ 		__webpack_require__.h = () => ("f811c05b634b40b4d372")
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */

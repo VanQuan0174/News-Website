@@ -4,10 +4,12 @@ import { VALIDATIONS } from '@/modules/business/cms/types/validations';
 import { Type } from 'class-transformer';
 
 export class UpdateBlogDto {
-  @IsInt()
-  @Type(() => Number) // Chuyển đổi dữ liệu đầu vào thành số
-  @IsNotEmpty()
-  categoryId: number; // ID của danh mục
+  id: number;
+
+  // @IsInt()
+  // @Type(() => Number) // Chuyển đổi dữ liệu đầu vào thành số
+  // @IsNotEmpty()
+  // categoryId: number; // ID của danh mục
 
   @IsNotEmpty({ message: VALIDATIONS.BLOG.TITLE_REQUIRED })
   title: string;
@@ -18,15 +20,21 @@ export class UpdateBlogDto {
   @IsNotEmpty({ message: VALIDATIONS.BLOG.CONTENT_REQUIRED })
   content: string;
 
-  @IsOptional()
-  image: string; // ảnh, nếu có
+  @IsNotEmpty({ message: VALIDATIONS.BLOG.AUTHOR_REQUIRED })
+  author: string;
+
+  @IsNotEmpty({ message: VALIDATIONS.BLOG.SOURCE_REQUIRED })
+  source: string;
+
+  // @IsOptional()
+  // image: string; // ảnh, nếu có
 
   // @IsEnum(BlogType)
   // @IsNotEmpty({ message: VALIDATIONS.BLOG.TYPE_REQUIRED })
   // type: BlogType;
 
-  @IsInt()
-  @Type(() => Number)
-  @IsNotEmpty({ message: VALIDATIONS.BLOG.PRIORITY_REQUIRED })
-  priority: number; // mức độ ưu tiên
+  // @IsInt()
+  // @Type(() => Number)
+  // @IsNotEmpty({ message: VALIDATIONS.BLOG.PRIORITY_REQUIRED })
+  // priority: number; // mức độ ưu tiên
 }

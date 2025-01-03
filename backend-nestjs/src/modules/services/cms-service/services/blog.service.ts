@@ -6,6 +6,9 @@ import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { unlink } from 'fs/promises'; // Import phương thức để xóa file
+import { BlogTagEntity } from '@/database/entities/blog-tag.entity';
+import { TagEntity } from '@/database/entities/tag.entity';
+import { BlogTagService } from './blog-tag.service';
 
 export class BlogsService {
   constructor(
@@ -14,6 +17,14 @@ export class BlogsService {
 
     @InjectRepository(CategoryEntity)
     private categotiesRepository: Repository<CategoryEntity>,
+
+    @InjectRepository(BlogTagEntity)
+    private blogTagRepository: Repository<BlogTagEntity>,
+
+    @InjectRepository(TagEntity)
+    private tagRepository: Repository<TagEntity>,
+
+    private blogTagService: BlogTagService,
   ) {}
 
   async findAll(): Promise<BlogEntity[]> {
@@ -26,8 +37,29 @@ export class BlogsService {
     });
   }
 
-  async create(createBlogDto: CreateBlogDto): Promise<BlogEntity> {
-    // Tìm CategoryEntity dựa trên categoryId
+  // async create(createBlogDto: CreateBlogDto): Promise<BlogEntity> {
+  //   // Tìm CategoryEntity dựa trên categoryId
+  //   const category = await this.categotiesRepository.findOne({
+  //     where: { id: Number(createBlogDto.categoryId) },
+  //   });
+
+  //   if (!category) {
+  //     throw new NotFoundException('Danh mục không tồn tại');
+  //   }
+
+  //   // Tạo mới BlogEntity và gán đối tượng category vào blog
+  //   const newBlog = this.blogsRepository.create({
+  //     ...createBlogDto, // Gán tất cả các trường từ createBlogDto
+  //   });
+
+  //   // Lưu BlogEntity vào cơ sở dữ liệu
+  //   return this.blogsRepository.save(newBlog);
+  // }
+
+  async create(
+    createBlogDto: CreateBlogDto,
+    tagIds: number[],
+  ): Promise<BlogEntity> {
     const category = await this.categotiesRepository.findOne({
       where: { id: Number(createBlogDto.categoryId) },
     });
@@ -36,13 +68,23 @@ export class BlogsService {
       throw new NotFoundException('Danh mục không tồn tại');
     }
 
-    // Tạo mới BlogEntity và gán đối tượng category vào blog
     const newBlog = this.blogsRepository.create({
-      ...createBlogDto, // Gán tất cả các trường từ createBlogDto
+      ...createBlogDto,
     });
+    const savedBlog = await this.blogsRepository.save(newBlog);
 
-    // Lưu BlogEntity vào cơ sở dữ liệu
-    return this.blogsRepository.save(newBlog);
+    // Kiểm tra xem tagIds có tồn tại trong bảng tag không
+    if (tagIds && tagIds.length > 0) {
+      const tags = await this.tagRepository.findByIds(tagIds);
+
+      if (tags.length !== tagIds.length) {
+        throw new NotFoundException('Một số tag không tồn tại');
+      }
+
+      await this.blogTagService.addTagsToBlog(savedBlog.id, tagIds);
+    }
+
+    return savedBlog;
   }
 
   async destroy(id: number): Promise<string> {
@@ -103,27 +145,24 @@ export class BlogsService {
   }
 
   async update(id: number, updateBlogDto: UpdateBlogDto): Promise<BlogEntity> {
-    const { categoryId, title, summary, content, image, priority } =
-      updateBlogDto;
-
     // Kiểm tra blog có tồn tại không
     const blog = await this.blogsRepository.findOne({ where: { id } });
     if (!blog) {
       throw new NotFoundException(`Blog với ID ${id} không tồn tại`);
     }
 
-    // Nếu có categoryId, kiểm tra danh mục tồn tại
-    if (categoryId) {
-      const category = await this.categotiesRepository.findOne({
-        where: { id: categoryId },
-      });
-      if (!category) {
-        throw new NotFoundException(
-          `Danh mục với ID ${categoryId} không tồn tại`,
-        );
-      }
-      blog.category = category;
-    }
+    // // Nếu có categoryId, kiểm tra danh mục tồn tại
+    // if (categoryId) {
+    //   const category = await this.categotiesRepository.findOne({
+    //     where: { id: categoryId },
+    //   });
+    //   if (!category) {
+    //     throw new NotFoundException(
+    //       `Danh mục với ID ${categoryId} không tồn tại`,
+    //     );
+    //   }
+    //   blog.category = category;
+    // }
 
     // Cập nhật các trường khác
 

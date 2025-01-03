@@ -1,4 +1,10 @@
-import { IsEnum, IsInt, IsNotEmpty, IsOptional } from 'class-validator';
+import {
+  IsArray,
+  IsEnum,
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+} from 'class-validator';
 import { VALIDATIONS } from '@/modules/business/cms/types/validations';
 // import { BlogType } from '@/database/entities/blog.entity';
 import { Type } from 'class-transformer';
@@ -35,4 +41,7 @@ export class CreateBlogDto {
   @Type(() => Number)
   @IsNotEmpty({ message: VALIDATIONS.BLOG.PRIORITY_REQUIRED })
   priority: number; // mức độ ưu tiên
+
+  @IsOptional() // Chỉ cần nếu có tagIds trong body
+  tagIds: number[];
 }

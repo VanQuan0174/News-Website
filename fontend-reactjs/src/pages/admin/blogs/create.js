@@ -14,7 +14,6 @@ const CreateBlog = () => {
     // State lưu thông tin bài viết mới
     const [newBlog, setNewBlog] = useState({
         title: '',
-        type: '',
         summary: '',
         content: '',
         categoryId: '',
@@ -214,7 +213,7 @@ const CreateBlog = () => {
                     </select>
                 </div>
 
-                <div className="mb-3">
+                {/* <div className="mb-3">
                     <label htmlFor="tags" className="form-label">Thẻ tags bài viết</label>
                     <input
                         type="text"
@@ -222,7 +221,7 @@ const CreateBlog = () => {
                         id="tags"
                         name="tags"
                     />
-                </div>
+                </div> */}
 
                 <div className="mb-3">
                     <label htmlFor="image" className="form-label">Ảnh bài viết</label>

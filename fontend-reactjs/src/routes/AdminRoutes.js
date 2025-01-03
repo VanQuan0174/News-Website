@@ -13,6 +13,7 @@ import Login from '../pages/admin/auth/login';
 import ProtectedRoute from '../ProtectedRoute';
 import CreateTag from '../pages/admin/tags/create';
 import ListTag from '../pages/admin/tags/index';
+import UpdateBlog from '../pages/admin/blogs/update';
 
 
 const AdminRoutes = () => (
@@ -38,11 +39,12 @@ const AdminRoutes = () => (
             {/* Quản lý bài viết */}
             <Route path="blogs" element={<ListBlog />} />
             <Route path="add-blog" element={<CreateBlog />} />
-
+            <Route path="update-blog/:id" element={<UpdateBlog />} />
 
             {/* Quản lý thẻ tag của bài viết */}
             <Route path="tags" element={<ListTag />} />
             <Route path="add-tag" element={<CreateTag />} />
+
         </Route>
     </Routes>
 );

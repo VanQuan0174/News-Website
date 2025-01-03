@@ -8,6 +8,7 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { CategoryEntity } from './database/entities/category.entity';
 import { BlogEntity } from './database/entities/blog.entity';
 import { TagEntity } from './database/entities/tag.entity';
+import { BlogTagEntity } from './database/entities/blog-tag.entity';
 
 @Module({
   imports: [
@@ -18,7 +19,13 @@ import { TagEntity } from './database/entities/tag.entity';
       username: 'root',
       password: '',
       database: 'news-website',
-      entities: [UserEntity, CategoryEntity, BlogEntity, TagEntity],
+      entities: [
+        UserEntity,
+        CategoryEntity,
+        BlogEntity,
+        TagEntity,
+        BlogTagEntity,
+      ],
       synchronize: true,
     }),
     ConfigModule.forRoot({

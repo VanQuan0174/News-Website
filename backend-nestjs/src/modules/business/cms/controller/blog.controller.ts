@@ -45,13 +45,14 @@ export class BlogsController {
   )
   async create(
     @Body() createBlogDto: CreateBlogDto,
+    @Body('tagIds') tagIds: number[],
     @UploadedFile() file: Express.Multer.File,
   ) {
     if (file) {
       createBlogDto.image = file.filename;
     }
 
-    return await this.blogsService.create(createBlogDto);
+    return await this.blogsService.create(createBlogDto, tagIds);
   }
 
   @Delete(':id')
