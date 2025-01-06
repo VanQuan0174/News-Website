@@ -32,6 +32,14 @@ export class CategoryEntity extends BaseEntity {
   // @OneToMany(() => CategoryEntity, (category) => category.parent)
   // children: CategoryEntity[];
 
+  @ManyToOne(() => CategoryEntity, (category) => category.children, {
+    nullable: true,
+  })
+  parent: CategoryEntity;
+
+  @OneToMany(() => CategoryEntity, (category) => category.parent)
+  children: CategoryEntity[];
+
   // Quan hệ một - nhiều (Một danh mục có thể có nhiều bài viết)
   @OneToMany(() => BlogEntity, (blog) => blog.category)
   blogs: BlogEntity[];

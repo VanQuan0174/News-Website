@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react';
 import requestApi from '../../../helpers/api'; // Đường dẫn đến file requestApi.js
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';  // Import SweetAlert2
+
 const Index = () => {
     const [categories, setCategories] = useState([]); // State lưu danh sách sản phẩm
-
+    const [categoryMap, setCategoryMap] = useState({}); // State lưu thông tin danh mục theo id
     const navigate = useNavigate(); // Hook điều hướng
 
     // Hàm lấy danh sách sản phẩm
@@ -13,6 +14,13 @@ const Index = () => {
             try {
                 const res = await requestApi('/categories', 'GET');
                 setCategories(res.data);
+
+                // Tạo một bản đồ các danh mục theo id để dễ dàng truy xuất
+                const categoryMap = res.data.reduce((acc, category) => {
+                    acc[category.id] = category;
+                    return acc;
+                }, {});
+                setCategoryMap(categoryMap);
             } catch (error) {
                 console.error('Lỗi khi lấy danh sách danh mục', error);
             }
@@ -45,6 +53,13 @@ const Index = () => {
             Swal.fire('Kết thúc', 'Xóa danh mục đã bị hủy', 'error')
         }
     };
+
+    // Hàm lấy tên danh mục cha từ parent_id
+    const getParentName = (parentId) => {
+        if (!parentId) return 'Không có';  // Nếu không có parent_id thì trả về 'Không có'
+        return categoryMap[parentId]?.name || 'Không xác định';  // Trả về tên danh mục cha hoặc 'Không xác định' nếu không tìm thấy
+    };
+
     return (
         <div>
             <button
@@ -59,6 +74,7 @@ const Index = () => {
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Tên danh mục</th>
+                        <th scope="col">Danh mục cha</th> {/* Cột mới cho danh mục cha */}
                         <th scope="col">Hành động</th>
                     </tr>
                 </thead>
@@ -67,6 +83,7 @@ const Index = () => {
                         <tr key={category.id}>
                             <td>{index + 1}</td>
                             <td>{category.name}</td>
+                            <td>{getParentName(category.parent_id)}</td> {/* Hiển thị tên danh mục cha */}
                             <td>
                                 <button
                                     className="btn btn-sm btn-warning me-2"

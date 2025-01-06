@@ -1217,6 +1217,32 @@ let CategoriesService = class CategoriesService {
     async findAll() {
         return await this.categotiesRepository.find();
     }
+    async menu() {
+        const categories = await this.categotiesRepository.find({
+            relations: ['children'],
+        });
+        return this.buildCategoryTree(categories);
+    }
+    buildCategoryTree(categories) {
+        const tree = [];
+        const categoryMap = {};
+        categories.forEach((category) => {
+            categoryMap[category.id] = category;
+            category.children = [];
+        });
+        categories.forEach((category) => {
+            if (category.parent_id === null) {
+                tree.push(category);
+            }
+            else {
+                const parentCategory = categoryMap[category.parent_id];
+                if (parentCategory) {
+                    parentCategory.children.push(category);
+                }
+            }
+        });
+        return tree;
+    }
     async findOne(id) {
         return await this.categotiesRepository.findOne({
             where: { id: id },
@@ -1307,6 +1333,16 @@ __decorate([
     (0, typeorm_1.Column)({ type: 'int', nullable: true }),
     __metadata("design:type", Number)
 ], CategoryEntity.prototype, "parent_id", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => CategoryEntity, (category) => category.children, {
+        nullable: true,
+    }),
+    __metadata("design:type", CategoryEntity)
+], CategoryEntity.prototype, "parent", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => CategoryEntity, (category) => category.parent),
+    __metadata("design:type", Array)
+], CategoryEntity.prototype, "children", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => blog_entity_1.BlogEntity, (blog) => blog.category),
     __metadata("design:type", Array)
@@ -1769,6 +1805,9 @@ let CategoriesController = class CategoriesController {
     constructor(categoriesService) {
         this.categoriesService = categoriesService;
     }
+    menu() {
+        return this.categoriesService.menu();
+    }
     findAll() {
         return this.categoriesService.findAll();
     }
@@ -1786,6 +1825,12 @@ let CategoriesController = class CategoriesController {
     }
 };
 exports.CategoriesController = CategoriesController;
+__decorate([
+    (0, common_1.Get)('menu'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], CategoriesController.prototype, "menu", null);
 __decorate([
     (0, common_1.Get)(),
     __metadata("design:type", Function),
@@ -2356,7 +2401,7 @@ module.exports = require("path");
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	(() => {
-/******/ 		__webpack_require__.h = () => ("8b2a5304ff3a5a3ee92f")
+/******/ 		__webpack_require__.h = () => ("9b94f7fb735599dc4380")
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */

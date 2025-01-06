@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import requestApi from '../../../../../helpers/api';
 
 function Nav() {
     const [isCategoryVisible, setCategoryVisible] = useState(false);
@@ -34,6 +35,21 @@ function Nav() {
             setCategoryVisible(false);
         }, 100);
     };
+
+    const [categories, setCategories] = useState([]);
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const res = await requestApi('/categories/menu', 'GET'); // Gọi API danh mục
+                setCategories(res.data); // Lưu dữ liệu vào state
+
+            } catch (error) {
+                console.error('Error fetching categories:', error);
+            }
+        };
+
+        fetchCategories(); // Gọi hàm fetchCategories khi component mount
+    }, []); // Chạy chỉ một lần khi component mount
 
     return (
         <>
@@ -84,61 +100,25 @@ function Nav() {
                         <h3>TẤT CẢ CHUYÊN MỤC</h3>
                     </div>
                     <div className="category__items d-flex">
-                        <ul>
-                            <li className="category__items-title">TIN TỨC - SỰ KIỆN</li>
-                            <li>
-                                <a href="#category2">Chuyên mục 2</a>
-                            </li>
-                            <li>
-                                <a href="#category3">Chuyên mục 3</a>
-                            </li>
-                        </ul>
-                        <ul>
-                            <li className="category__items-title">HỘI NHẬP VÀ PHÁT TRIỂN</li>
-                            <li>
-                                <a href="#category2">Chuyên mục 2</a>
-                            </li>
-                            <li>
-                                <a href="#category3">Chuyên mục 3</a>
-                            </li>
-                        </ul>
-                        <ul>
-                            <li className="category__items-title">CƠ QUAN ĐẠI DIỆN VÀ KIỀU BÀO</li>
-                            <li>
-                                <a href="#category2">Chuyên mục 2</a>
-                            </li>
-                            <li>
-                                <a href="#category3">Chuyên mục 3</a>
-                            </li>
-                        </ul>
-                        <ul>
-                            <li className="category__items-title">NGHIÊN CỨU - TRAO ĐỔI</li>
-                            <li>
-                                <a href="#category2">Chuyên mục 2</a>
-                            </li>
-                            <li>
-                                <a href="#category3">Chuyên mục 3</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div className="category__items d-flex">
-                        <ul>
-                            <li className="category__items-title">PHOTO</li>
-                        </ul>
-                        <ul>
-                            <li className="category__items-title">VIDEO</li>
-                        </ul>
-                        <ul>
-                            <li className="category__items-title">BIÊN GIỚI - BIỂN, ĐẢO</li>
-                        </ul>
-                        <ul>
-                            <li className="category__items-title">TƯ LIỆU - VĂN KIỆN</li>
-                        </ul>
-                    </div>
-                    <div className="category__items">
-                        <ul>
-                            <li className="category__items-title">DỰ THI ONLINE</li>
-                        </ul>
+                        {categories.map(category => (
+                            <ul key={category.id}>
+                                <li className="category__items-title">{category.name}</li>
+                                {category.children && category.children.length > 0 && (
+                                    category.children.map(child => (
+                                        <li key={child.id}>
+                                            <a href={`#category${child.id}`}>{child.name}</a>
+                                            {child.children && child.children.length > 0 && (
+                                                child.children.map(grandChild => (
+                                                    <li key={grandChild.id}>
+                                                        <a href={`#category${grandChild.id}`}>{grandChild.name}</a>
+                                                    </li>
+                                                ))
+                                            )}
+                                        </li>
+                                    ))
+                                )}
+                            </ul>
+                        ))}
                     </div>
                 </div>
             </div>

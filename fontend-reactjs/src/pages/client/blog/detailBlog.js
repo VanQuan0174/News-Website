@@ -7,7 +7,7 @@ function DetailBlog() {
     useEffect(() => {
         const fetchDetailBlog = async () => {
             try {
-                const res = await requestApi(`/blogs/1`, 'GET'); // Gọi API với ID cố định
+                const res = await requestApi(`/blogs/3`, 'GET'); // Gọi API với ID cố định
                 setBlog(res.data); // Cập nhật state với dữ liệu từ API
             } catch (error) {
                 console.error('Lỗi khi lấy thông tin bài viết:', error);
@@ -128,7 +128,7 @@ function DetailBlog() {
                         </h2>
                         <div className="detail-blog-content" dangerouslySetInnerHTML={{ __html: blog.content }} />
                         <div className="news__author">
-                            <p className="author__name">{blog.author}(tổng hợp)</p>
+                            <p className="author__name">{blog.author}</p>
                             <p className="author__source">Nguồn: {blog.source}</p>
                         </div>
                         <div className="author__social">

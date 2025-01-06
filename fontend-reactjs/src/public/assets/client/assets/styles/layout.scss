@@ -122,18 +122,37 @@
   padding: 14px 10px 14px 10px;
   border-bottom: 1px solid var(--color-gray);
 }
+// .category__items {
+//   width: 100%;
+//   margin: 0 auto;
+//   justify-content: space-between;
+//   padding: 0px 10px 0px 10px;
+// }
+// .category__items ul {
+//   list-style: none;
+//   width: 248px;
+//   display: flex;
+//   flex-direction: column;
+//   flex: 1 1 23%;
+//   gap: 16px;
+// }
+
 .category__items {
+  display: flex; /* Hiển thị theo kiểu flex */
+  flex-wrap: wrap; /* Các ul sẽ tự động xuống dòng khi không đủ chỗ */
+  justify-content: start; /* Đảm bảo các ul cách đều nhau */
   width: 100%;
   margin: 0 auto;
-  justify-content: space-between;
-  padding: 0px 10px 0px 10px;
+  padding: 0 10px; /* Padding ngang */
 }
+
 .category__items ul {
   list-style: none;
-  width: 248px;
+  width: 23%; /* Mỗi ul chiếm 23% chiều rộng (4 mục mỗi hàng) */
   display: flex;
-  flex-direction: column;
-  gap: 16px;
+  flex-direction: column; /* Xếp các mục con theo chiều dọc */
+  gap: 16px; /* Khoảng cách giữa các mục con */
+  margin-bottom: 20px; /* Khoảng cách giữa các hàng */
 }
 .category__items-title {
   font-family: var(--font-family);
