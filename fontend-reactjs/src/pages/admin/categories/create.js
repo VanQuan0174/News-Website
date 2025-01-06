@@ -3,6 +3,7 @@ import Swal from "sweetalert2";
 import requestApi from "../../../helpers/api";
 import Input from "../../../components/form/input";
 import useForm from "../../../components/form/useForm";
+import { useEffect, useState } from "react";
 
 const CreateCategory = () => {
     const navigate = useNavigate();
@@ -16,8 +17,21 @@ const CreateCategory = () => {
             alert(`Đã xảy ra lỗi: ${error.message}`);
         }
     };
+    const [categories, setCategories] = useState([]);
 
-    const { values, handleInputChange, handleSubmit } = useForm({ name: '' }, onSubmit);
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const res = await requestApi('/categories', 'GET');
+                setCategories(res.data);
+            } catch (error) {
+                console.error('Lỗi khi lấy danh sách danh mục', error);
+            }
+        };
+        fetchCategories();
+    }, []);
+
+    const { values, handleInputChange, handleSubmit } = useForm({ name: '', parent_id: null }, onSubmit);
 
     return (
         <div>
@@ -30,6 +44,22 @@ const CreateCategory = () => {
                     value={values.name}
                     onChange={handleInputChange}
                 />
+                <div className="mb-3">
+                    <label htmlFor="parent_id" className="form-label">Danh mục cha</label>
+                    <select
+                        className="form-control"
+                        id="parent_id" name="parent_id"
+                        onChange={handleInputChange}
+                    >
+                        <option value="">Chọn danh mục</option>
+                        {categories.map((category) => (
+                            <option key={category.id} value={category.id}>
+                                {category.name}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+
                 <button type="submit" className="btn btn-success">Xác nhận</button>
             </form>
         </div>

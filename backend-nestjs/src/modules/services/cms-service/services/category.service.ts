@@ -37,6 +37,17 @@ export class CategoriesService {
       );
     }
 
+    let parentCategory: CategoryEntity | null = null;
+    if (createCategoryDto.parent_id) {
+      parentCategory = await this.categotiesRepository.findOneBy({
+        id: createCategoryDto.parent_id,
+      });
+
+      if (!parentCategory) {
+        throw new BadRequestException('Danh mục cha không tồn tại.');
+      }
+    }
+
     // Tạo và lưu danh mục mới
     const newCategory = this.categotiesRepository.create(createCategoryDto);
     return await this.categotiesRepository.save(newCategory);

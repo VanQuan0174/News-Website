@@ -1229,6 +1229,15 @@ let CategoriesService = class CategoriesService {
         if (existingCategory) {
             throw new common_1.BadRequestException(`Danh mục '${createCategoryDto.name}' đã tồn tại.`);
         }
+        let parentCategory = null;
+        if (createCategoryDto.parent_id) {
+            parentCategory = await this.categotiesRepository.findOneBy({
+                id: createCategoryDto.parent_id,
+            });
+            if (!parentCategory) {
+                throw new common_1.BadRequestException('Danh mục cha không tồn tại.');
+            }
+        }
         const newCategory = this.categotiesRepository.create(createCategoryDto);
         return await this.categotiesRepository.save(newCategory);
     }
@@ -1294,6 +1303,10 @@ __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], CategoryEntity.prototype, "name", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'int', nullable: true }),
+    __metadata("design:type", Number)
+], CategoryEntity.prototype, "parent_id", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => blog_entity_1.BlogEntity, (blog) => blog.category),
     __metadata("design:type", Array)
@@ -1841,6 +1854,10 @@ __decorate([
     (0, class_validator_1.IsNotEmpty)({ message: validations_1.VALIDATIONS.CATEGORY.NAME_REQUIRED }),
     __metadata("design:type", String)
 ], CreateCategoryDto.prototype, "name", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", Number)
+], CreateCategoryDto.prototype, "parent_id", void 0);
 
 
 /***/ }),
@@ -2339,7 +2356,7 @@ module.exports = require("path");
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	(() => {
-/******/ 		__webpack_require__.h = () => ("cfe62506c8abf799e388")
+/******/ 		__webpack_require__.h = () => ("8b2a5304ff3a5a3ee92f")
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */

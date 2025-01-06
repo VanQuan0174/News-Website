@@ -107,6 +107,11 @@ const CreateBlog = () => {
             alert(`Đã xảy ra lỗi: ${error.message}`);
         }
     };
+    function uploadPlugin(editor) {
+        editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
+            return new CustomUploadAdapter(loader);
+        };
+    }
 
     return (
         <div className="form-container">
@@ -142,7 +147,7 @@ const CreateBlog = () => {
                         data="<p>Nhập nội dung bài viết ...</p>"
                         config={{
                             licenseKey: "eyJhbGciOiJFUzI1NiJ9.eyJleHAiOjE3MzY4MTI3OTksImp0aSI6ImQ1OWI5NzI2LTk1OWEtNDM0Ny1hNzFjLTY4NTFiMzBlZjdhOCIsInVzYWdlRW5kcG9pbnQiOiJodHRwczovL3Byb3h5LWV2ZW50LmNrZWRpdG9yLmNvbSIsImRpc3RyaWJ1dGlvbkNoYW5uZWwiOlsiY2xvdWQiLCJkcnVwYWwiLCJzaCJdLCJ3aGl0ZUxhYmVsIjp0cnVlLCJsaWNlbnNlVHlwZSI6InRyaWFsIiwiZmVhdHVyZXMiOlsiKiJdLCJ2YyI6Ijk5MzlhNDhjIn0.uIAWOhaLBa8QSFfO3QiHtTScndTl0lgfZQfyJobTg9s3qgsTd8qOGx1mTeSK_rxwuWXYQAgI5OOIDVVLpd9lSA",
-                            extraPlugins: [CustomUploadAdapter],
+                            extraPlugins: [uploadPlugin],
                         }}
                         onReady={editor => {
                             console.log('Editor is ready to use', editor);
@@ -162,7 +167,6 @@ const CreateBlog = () => {
                         }}
                     />
                 </div>
-
                 <div className="mb-3">
                     <label htmlFor="category" className="form-label">Danh mục</label>
                     <select
