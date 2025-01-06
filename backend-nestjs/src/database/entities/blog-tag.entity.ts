@@ -1,12 +1,8 @@
 import {
   BaseEntity,
   Entity,
-  JoinColumn,
-  ManyToOne,
   PrimaryColumn,
 } from 'typeorm';
-import { BlogEntity } from './blog.entity';
-import { TagEntity } from './tag.entity';
 
 export const TABLE_BLOG_TAG = 'blog_tag';
 

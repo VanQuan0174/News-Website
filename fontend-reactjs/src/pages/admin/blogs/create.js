@@ -9,11 +9,6 @@ import Swal from "sweetalert2";
 
 const CreateBlog = () => {
 
-
-    // Hook để điều hướng sau khi tạo thành công
-    const navigate = useNavigate();
-
-    // State lưu thông tin bài viết mới
     const [newBlog, setNewBlog] = useState({
         title: '',
         summary: '',
@@ -22,42 +17,36 @@ const CreateBlog = () => {
         priority: '',
         image: null,
     });
-
-    // State để hiển thị ảnh xem trước
     const [imagePreview, setImagePreview] = useState(null);
-
-    // State lưu danh mục
     const [categories, setCategories] = useState([]);
+    const [tags, setTags] = useState([]);
+    const [selectedTags, setSelectedTags] = useState([]);
+    const navigate = useNavigate();
 
-    // Lấy danh sách danh mục từ API
     useEffect(() => {
         const fetchCategories = async () => {
             try {
                 const res = await requestApi('/categories', 'GET');
-                setCategories(res.data); // Gán danh mục vào state
+                setCategories(res.data);
             } catch (error) {
                 console.error('Lỗi khi lấy danh sách danh mục', error);
             }
         };
-
         fetchCategories();
     }, []);
 
-    const [tags, setTags] = useState([]);
     useEffect(() => {
         const fetchTags = async () => {
             try {
                 const res = await requestApi('/tags', 'GET');
                 setTags(res.data);
             } catch (error) {
-                console.error('lỗi khi lấy danh sách tag', error);
+                console.error('Lỗi khi lấy danh sách tag', error);
             }
-        }
+        };
         fetchTags();
     }, []);
 
-
-    // Xử lý khi thay đổi dữ liệu input
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setNewBlog(prevBlog => ({
@@ -66,7 +55,6 @@ const CreateBlog = () => {
         }));
     };
 
-    // Xử lý khi thay đổi file ảnh
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         setNewBlog(prevBlog => ({
@@ -78,25 +66,24 @@ const CreateBlog = () => {
         }
     };
 
-    // const handleTagChange = (tagId) => {
-    //     tags((prevSelectedTags) => {
-    //         if (prevSelectedTags.includes(tagId)) {
-    //             return prevSelectedTags.filter((id) => id !== tagId);
-    //         } else {
-    //             return [...prevSelectedTags, tagId];
-    //         }
-    //     });
-    // };
+    const handleTagChange = (tagId) => {
+        setSelectedTags((prevSelectedTags) => {
+            if (prevSelectedTags.includes(tagId)) {
+                return prevSelectedTags.filter((id) => id !== tagId);
+            } else {
+                return [...prevSelectedTags, tagId];
+            }
+        });
+    };
 
-    // Xử lý khi gửi form
     const handleSubmit = async (e) => {
-        e.preventDefault(); // Ngăn chặn reload trang
+        e.preventDefault();
 
         try {
             const formData = new FormData();
             formData.append('title', newBlog.title);
             formData.append('summary', newBlog.summary);
-            formData.append('content', newBlog.content);  // Đảm bảo content được thêm vào formData
+            formData.append('content', newBlog.content);
             formData.append('categoryId', newBlog.categoryId);
             formData.append('priority', newBlog.priority);
             formData.append('author', newBlog.author);
@@ -106,7 +93,8 @@ const CreateBlog = () => {
                 formData.append('image', newBlog.image);
             }
 
-            // Gửi dữ liệu lên backend
+            selectedTags.forEach(tagId => formData.append('tagIds', tagId));
+
             await requestApi('/blogs', 'POST', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
@@ -119,12 +107,6 @@ const CreateBlog = () => {
             alert(`Đã xảy ra lỗi: ${error.message}`);
         }
     };
-
-    function uploadPlugin(editor) {
-        editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
-            return new CustomUploadAdapter(loader);
-        };
-    }
 
     return (
         <div className="form-container">
@@ -160,7 +142,7 @@ const CreateBlog = () => {
                         data="<p>Nhập nội dung bài viết ...</p>"
                         config={{
                             licenseKey: "eyJhbGciOiJFUzI1NiJ9.eyJleHAiOjE3MzY4MTI3OTksImp0aSI6ImQ1OWI5NzI2LTk1OWEtNDM0Ny1hNzFjLTY4NTFiMzBlZjdhOCIsInVzYWdlRW5kcG9pbnQiOiJodHRwczovL3Byb3h5LWV2ZW50LmNrZWRpdG9yLmNvbSIsImRpc3RyaWJ1dGlvbkNoYW5uZWwiOlsiY2xvdWQiLCJkcnVwYWwiLCJzaCJdLCJ3aGl0ZUxhYmVsIjp0cnVlLCJsaWNlbnNlVHlwZSI6InRyaWFsIiwiZmVhdHVyZXMiOlsiKiJdLCJ2YyI6Ijk5MzlhNDhjIn0.uIAWOhaLBa8QSFfO3QiHtTScndTl0lgfZQfyJobTg9s3qgsTd8qOGx1mTeSK_rxwuWXYQAgI5OOIDVVLpd9lSA",
-                            extraPlugins: [uploadPlugin],
+                            extraPlugins: [CustomUploadAdapter],
                         }}
                         onReady={editor => {
                             console.log('Editor is ready to use', editor);
@@ -260,6 +242,8 @@ const CreateBlog = () => {
                                     type="checkbox"
                                     id={`tag-${tag.id}`}
                                     value={tag.id}
+                                    checked={selectedTags.includes(tag.id)}
+                                    onChange={() => handleTagChange(tag.id)}
                                 />
                                 <label htmlFor={`tag-${tag.id}`} className="ms-2">{tag.name}</label>
                             </div>

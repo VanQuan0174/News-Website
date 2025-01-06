@@ -16,7 +16,7 @@ export class AuthService {
     // Tìm người dùng theo email
     const user = await this.usersRepository.findOne({ where: { email } });
 
-    // Nếu không tìm thấy user, trả về null ngay lập tức
+    // Nếu không tìm thấy user trả về null
     if (!user) return null;
 
     // So sánh mật khẩu nhập vào với hash lưu trong cơ sở dữ liệu
