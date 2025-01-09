@@ -50,14 +50,14 @@ function Header() {
             <div className="header__bottom d-flex">
                 <div className="header__bottom--left">
                     <img
-                        data-src=''
+                        data-src='http://localhost:8080/uploads/banners/header.jpg'
                         className="lazy"
                         alt="cơ quan ban chỉ đọa phòng chống đối ngoại"
                     />
                 </div>
                 <div className="header__bottom--right">
                     <img
-                        src="/assets/images/banner/Cot-co-Ha-noi.jpg"
+                        data-src="http://localhost:8080/uploads/banners/Cot-co-Ha-noi.jpg"
                         className="lazy"
                         alt=" cột cờ hà Nội"
                     />

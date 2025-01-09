@@ -207,6 +207,37 @@
   justify-content: space-between;
   position: relative;
 }
+
+.news-ticker__scroll {
+  overflow: hidden; /* Ẩn phần tử vượt ra ngoài */
+  position: relative;
+  width: 85%;
+  height: 40px;
+}
+
+.news-ticker__track {
+  display: inline-block;
+  white-space: nowrap;
+  position: absolute;
+  animation: scroll-left 15s linear infinite; /* Hiệu ứng cuộn */
+}
+
+.news-ticker__title {
+  display: inline-block;
+  margin-right: 100px; /* Khoảng cách giữa các tiêu đề */
+  white-space: nowrap; /* Giữ nội dung trên cùng một dòng */
+}
+
+/* Keyframes để cuộn từ phải sang trái */
+@keyframes scroll-left {
+  0% {
+    transform: translateX(100%); /* Bắt đầu ngoài màn hình bên phải */
+  }
+  100% {
+    transform: translateX(-100%); /* Kết thúc ngoài màn hình bên trái */
+  }
+}
+
 .dropdown-menu {
   display: none;
   position: absolute;

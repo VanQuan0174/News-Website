@@ -99,7 +99,7 @@ a {
 }
 
 img.lazy {
-  opacity: 0;
+  opacity: 0; // đổi thành 0 sau
   transition: opacity 0.2s ease-in;
 }
 

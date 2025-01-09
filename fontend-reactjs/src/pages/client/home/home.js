@@ -1,7 +1,38 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import '../../../public/assets/client/assets/styles/page/home.scss';
+import requestApi from '../../../helpers/api';
 
 function Home() {
+    const [menus, setMenus] = useState([]);
+
+    useEffect(() => {
+        const fetchMenus = async () => {
+            try {
+                const res = await requestApi('/categories/menu', 'GET'); // Gọi API danh mục
+                setMenus(res.data); // Lưu dữ liệu vào state
+            } catch (error) {
+                console.error('Error fetching categories:', error);
+            }
+        };
+
+        fetchMenus();
+    }, []);
+
+    // const [blogs, setBlogs] = useState([]);
+
+    // useEffect(() => {
+    //     const fetchBlogs = async () => {
+    //         try {
+    //             // Lấy tất cả các bài viết và thông tin về danh mục trong một lần gọi API
+    //             const res = await requestApi('/blogs', 'GET');
+    //             setBlogs(res.data); 
+    //         } catch (error) {
+    //             console.error('Lỗi khi lấy danh sách bài viết hoặc danh mục', error);
+    //         }
+    //     };
+
+    //     fetchBlogs();
+    // }, []);
     return (
         <main className="main d-flex">
             <section className="main__section--featured-news d-flex">
@@ -117,10 +148,10 @@ function Home() {
             </section>
             <section className="main__section--banner d-flex">
                 <div className="banner__left">
-                    <img data-src="../image/banner/banner-left.jpg" className="lazy" />
+                    <img data-src="http://localhost:8080/uploads/banners/banner-left.jpg" className="lazy" />
                 </div>
                 <div className="banner__right">
-                    <img data-src="../image/banner/banner-right.jpg" className="lazy" />
+                    <img data-src="http://localhost:8080/uploads/banners/banner-right.jpg" className="lazy" />
                 </div>
             </section>
             <section className="main__section--news-event d-flex">
@@ -128,15 +159,18 @@ function Home() {
                     <div className="section__nav d-flex">
                         <div className="section__nav-list d-flex">
                             <ul>
-                                <li className="text-heading">
-                                    <a href="#">TIN TỨC - SỰ KIỆN</a>
-                                </li>
-                                <li className="section__nav-item">
-                                    <a href="#">Thời sự chính trị</a>
-                                </li>
-                                <li className="section__nav-item">
-                                    <a href="#">Chính sách - Pháp luật</a>
-                                </li>
+                                {menus.filter(menu => menu.name === "TIN TỨC - SỰ KIỆN").map(menu => (
+                                    <>
+                                        <li key={menu.id} className="text-heading">
+                                            <a href="#">{menu.name}</a>
+                                        </li>
+                                        {menu.children && menu.children.length > 0 && menu.children.slice(0, 5).map(child => (
+                                            <li key={child.id} className="section__nav-item">
+                                                <a href={`#category${child.id}`}>{child.name}</a>
+                                            </li>
+                                        ))}
+                                    </>
+                                ))}
                             </ul>
                         </div>
                         <div className="section__see-more">
@@ -260,37 +294,37 @@ function Home() {
                 <div className="section__right d-flex">
                     <img
                         className="lazy"
-                        data-src="../image/news-event/cong-dich-vu-quoc-gia.png"
+                        data-src="http://localhost:8080/uploads/banners/cong-dich-vu-quoc-gia.png"
                     />
                     <img
                         className="lazy"
-                        data-src="../image/news-event/bien-dao-viet-nam.png"
+                        data-src="http://localhost:8080/uploads/banners/bien-dao-viet-nam.png"
                     />
-                    <img className="lazy" data-src="../image/news-event/t63-tinh-thanh.png" />
-                    <img className="lazy" data-src="../image/news-event/chuyen-doi-ip6.png" />
+                    <img className="lazy" data-src="http://localhost:8080/uploads/banners/t63-tinh-thanh.png" />
+                    <img className="lazy" data-src="http://localhost:8080/uploads/banners/chuyen-doi-ip6.png" />
                     <img
                         className="lazy"
-                        data-src="../image/news-event/co-so-du-lieu-quoc-gia.png"
+                        data-src="http://localhost:8080/uploads/banners/co-so-du-lieu-quoc-gia.png"
                     />
-                    <img className="lazy" data-src="../image/news-event/pc-covi.png" />
+                    <img className="lazy" data-src="http://localhost:8080/uploads/banners/pc-covi.png" />
                 </div>
             </section>
             <section className="main__section main-desktop__section main__section--integration-development d-flex ">
                 <div className="section__nav d-flex">
                     <div className="section__nav-list d-flex">
                         <ul>
-                            <li className="text-heading">
-                                <a href="#">HỘI NHẬP VÀ PHÁT TRIỂN</a>
-                            </li>
-                            <li className="section__nav-item">
-                                <a href="#">Kinh tế - Đầu tư</a>
-                            </li>
-                            <li className="section__nav-item">
-                                <a href="#">Văn hóa - Xã hội</a>
-                            </li>
-                            <li className="section__nav-item">
-                                <a href="#">Thế giới - Việt Nam</a>
-                            </li>
+                            {menus.filter(menu => menu.name === "HỘI NHẬP VÀ PHÁT TRIỂN").map(menu => (
+                                <>
+                                    <li key={menu.id} className="text-heading">
+                                        <a href="#">{menu.name}</a>
+                                    </li>
+                                    {menu.children && menu.children.length > 0 && menu.children.slice(0, 5).map(child => (
+                                        <li key={child.id} className="section__nav-item">
+                                            <a href={`#category${child.id}`}>{child.name}</a>
+                                        </li>
+                                    ))}
+                                </>
+                            ))}
                         </ul>
                     </div>
                     <div className="section__see-more">
@@ -303,7 +337,6 @@ function Home() {
                         <div className="section__article section__article--large">
                             <div className="section__article--img">
                                 <a href="#">
-                                    {" "}
                                     <img
                                         data-src="../image/integration-development/nha-bao-an-do.jpg"
                                         className="lazy"
@@ -391,11 +424,11 @@ function Home() {
             </section>
             <section className="main__section--banner d-flex">
                 <div className="banner__left">
-                    <img data-src="../image/banner/vinh-phuc-70-nam.jpg" className="lazy" />
+                    <img data-src="http://localhost:8080/uploads/banners/vinh-phuc-70-nam.jpg" className="lazy" />
                 </div>
                 <div className="banner__right">
                     <img
-                        data-src="../image/banner/bao-hien-y-te-xa-hoi.jpg"
+                        data-src="http://localhost:8080/uploads/banners/bao-hien-y-te-xa-hoi.jpg"
                         className="lazy"
                     />
                 </div>
@@ -404,18 +437,18 @@ function Home() {
                 <div className="section__nav d-flex">
                     <div className="section__nav-list d-flex">
                         <ul>
-                            <li className="text-heading">
-                                <a href="#">CƠ QUAN ĐẠI DIỆN VÀ KIỀU BÀO</a>
-                            </li>
-                            <li className="section__nav-item">
-                                <a href="#">Cơ quan đại diện</a>
-                            </li>
-                            <li className="section__nav-item">
-                                <a href="#">Công tác ngoại vụ</a>
-                            </li>
-                            <li className="section__nav-item">
-                                <a href="#">Kiều bào</a>
-                            </li>
+                            {menus.filter(menu => menu.name === "KINH DOANH").map(menu => (
+                                <>
+                                    <li key={menu.id} className="text-heading">
+                                        <a href="#">{menu.name}</a>
+                                    </li>
+                                    {menu.children && menu.children.length > 0 && menu.children.slice(0, 5).map(child => (
+                                        <li key={child.id} className="section__nav-item">
+                                            <a href={`#category${child.id}`}>{child.name}</a>
+                                        </li>
+                                    ))}
+                                </>
+                            ))}
                         </ul>
                     </div>
                     <div className="section__see-more">
@@ -540,7 +573,7 @@ function Home() {
             </section>
             <section className="main__section--banner ">
                 <div className="banner__img">
-                    <img data-src="../image/banner/banner-2.jpg" className="lazy" />
+                    <img data-src="http://localhost:8080/uploads/banners/banner-2.jpg" className="lazy" />
                 </div>
             </section>
             <section className="main-mobi__section--news-event ">
@@ -884,7 +917,7 @@ function Home() {
                     <div className="section__row section__row--3">
                         <div className="most-viewed-image">
                             <img
-                                data-src="../image/most-viewed/anhcuoi.jpg"
+                                data-src="http://localhost:8080/uploads/banners/anhcuoi.jpg"
                                 className="lazy"
                                 alt="Bầu cử quốc hội khóa 9 và hội đồng nhân dân cấp cao"
                             />

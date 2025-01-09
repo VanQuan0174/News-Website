@@ -36,21 +36,37 @@ function Nav() {
         }, 100);
     };
 
-    const [categories, setCategories] = useState([]);
+    // chi tiết menu 
+    const [menu, setMenus] = useState([]);
     useEffect(() => {
-        const fetchCategories = async () => {
+        const fetchMenus = async () => {
             try {
                 const res = await requestApi('/categories/menu', 'GET'); // Gọi API danh mục
-                setCategories(res.data); // Lưu dữ liệu vào state
+                setMenus(res.data); // Lưu dữ liệu vào state
 
             } catch (error) {
                 console.error('Error fetching categories:', error);
             }
         };
 
-        fetchCategories(); // Gọi hàm fetchCategories khi component mount
+        fetchMenus(); // Gọi hàm fetchCategories khi component mount
     }, []); // Chạy chỉ một lần khi component mount
 
+    // danh mục
+
+    const [categories, setCategories] = useState([]); // State lưu danh sách sản phẩm
+    // Hàm lấy danh sách sản phẩm
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const res = await requestApi('/categories', 'GET');
+                setCategories(res.data);
+            } catch (error) {
+                console.error('Lỗi khi lấy danh sách danh mục', error);
+            }
+        };
+        fetchCategories();
+    }, []);
     return (
         <>
             <nav className="nav-desktop d-flex align-items-center">
@@ -58,23 +74,17 @@ function Nav() {
                     <div className="nav__content--list">
                         <ul>
                             <li>
-                                <a><Link to="/">HOME</Link></a>
+                                <a><Link to="/">TRANG CHỦ</Link></a>
                             </li>
-                            <li>
-                                <a><Link to="/">HỘI NHẬP VÀ PHÁT TRIỂN</Link></a>
-                            </li>
-                            <li>
-                                <a><Link to="/">CƠ QUAN ĐẠI DIỆN VÀ KIỀU BÀO</Link></a>
-                            </li>
-                            <li>
-                                <a><Link to="/">BIÊN GIỚI - BIỂN, ĐẢO</Link></a>
-                            </li>
-                            <li>
-                                <a><Link to="/">NGHIÊN CỨU - TRAO ĐỔI</Link></a>
-                            </li>
-                            <li>
-                                <a><Link to="/">TỰ LIỆU - VĂN KIỆN</Link></a>
-                            </li>
+                            {categories.slice(0, 5).map((category, index) => (
+                                <li key={index}>
+                                    <a>
+                                        <Link to={`/category/${category.slug || category.id}`}>
+                                            {category.name}
+                                        </Link>
+                                    </a>
+                                </li>
+                            ))}
                             <li className="category__expand-btn"
                                 onMouseEnter={handleMouseEnter}
                                 onMouseLeave={handleMouseLeave}>
@@ -100,11 +110,11 @@ function Nav() {
                         <h3>TẤT CẢ CHUYÊN MỤC</h3>
                     </div>
                     <div className="category__items d-flex">
-                        {categories.map(category => (
-                            <ul key={category.id}>
-                                <li className="category__items-title">{category.name}</li>
-                                {category.children && category.children.length > 0 && (
-                                    category.children.map(child => (
+                        {menu.map(menu => (
+                            <ul key={menu.id}>
+                                <li className="category__items-title">{menu.name}</li>
+                                {menu.children && menu.children.length > 0 && (
+                                    menu.children.map(child => (
                                         <li key={child.id}>
                                             <a href={`#category${child.id}`}>{child.name}</a>
                                             {child.children && child.children.length > 0 && (
