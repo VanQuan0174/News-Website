@@ -17,7 +17,7 @@ function Home() {
     useEffect(() => {
         const fetchMenus = async () => {
             try {
-                const res = await requestApi('/categories/menu', 'GET'); // Gọi API danh mục
+                const res = await requestApi('/categories/get-category-with-children', 'GET'); // Gọi API danh mục
                 setMenus(res.data); // Lưu dữ liệu vào state
             } catch (error) {
                 console.error('Error fetching categories:', error);
@@ -135,39 +135,28 @@ function Home() {
                             <div className="section__row--content d-flex">
                                 <div className="row__item--top">
                                     <img
-                                        data-src="../image/integration-development/van-kien-dai-hoi-8.jpg"
+                                        data-src="http://localhost:8080/uploads/banners/van-kien-dai-hoi-8.jpg"
                                         alt="Văn kiện đại hội lần thứ 8"
                                         className="lazy"
                                     />
                                 </div>
-                                <div className="row__item d-flex">
-                                    <div className="row__item--img">
-                                        <img
-                                            data-src="../image/integration-development/viet-nam-tai-nhat.jpg"
-                                            alt="Nỗ lực tổ chức an toàn lễ hội Việt Nam tại Nhật Bản lần 14"
-                                            className="lazy"
-                                        />
+                                {filteredBlogs.slice(2, 4).map((blog, index) => (
+                                    <div className="row__item d-flex">
+                                        <div className="row__item--img">
+                                            <img
+                                                src={`${process.env.REACT_APP_UPLOAD_URL}/uploads/blog/${blog.image}`}
+                                                alt="Nỗ lực tổ chức an toàn lễ hội Việt Nam tại Nhật Bản lần 14"
+                                                className="lazy"
+                                            />
+                                        </div>
+                                        <div className="row__item--title">
+                                            <Link to={`/blog-detail/${blog.id}`}>
+                                                {blog.title}
+                                            </Link>
+                                        </div>
                                     </div>
-                                    <div className="row__item--title">
-                                        <a href="#">
-                                            Nỗ lực tổ chức an toàn lễ hội Việt Nam tại Nhật Bản lần 14
-                                        </a>
-                                    </div>
-                                </div>
-                                <div className="row__item d-flex">
-                                    <div className="row__item--img">
-                                        <img
-                                            data-src="../image/integration-development/wb-con-bo-bao-cao.jpg"
-                                            alt="WB công bố báo cáo cập nhật đánh giá quốc gia năm 2021"
-                                            className="lazy"
-                                        />
-                                    </div>
-                                    <div className="row__item--title">
-                                        <a href="#">
-                                            WB công bố báo cáo cập nhật đánh giá quốc gia năm 2021
-                                        </a>
-                                    </div>
-                                </div>
+                                ))}
+
                             </div>
                         </div>
                     </div>
@@ -220,64 +209,24 @@ function Home() {
                     ))}
                     <div className="section__row section__row--3">
                         <div className="section__row--content d-flex">
-                            <div className="row__item d-flex">
-                                <div className="row__item--img">
-                                    <img
-                                        data-src="../image/representative-agencies-overseas/sv-vietnam-tai-cong-hoa-sec.jpg"
-                                        alt="inh viên Việt Nam tại Cộng hòa Tatarstan tổ chức cuộc thi 'Tiếng Việt giàu đẹp'"
-                                        className="lazy"
-                                    />
+                            {filteredBlogss.slice(2, 6).map((blog, index) => (
+                                <div className="row__item d-flex">
+                                    <div className="row__item--img">
+                                        <Link to={`/blog-detail/${blog.id}`}>
+                                            <img
+                                                src={`${process.env.REACT_APP_UPLOAD_URL}/uploads/blog/${blog.image}`}
+                                                alt={blog.title}
+                                                className="lazy"
+                                            />
+                                        </Link>
+                                    </div>
+                                    <div className="row__item--title">
+                                        <Link to={`/blog-detail/${blog.id}`}>
+                                            {blog.title}
+                                        </Link>
+                                    </div>
                                 </div>
-                                <div className="row__item--title">
-                                    <a href="#">
-                                        Sinh viên Việt Nam tại Cộng hòa Tatarstan tổ chức cuộc thi
-                                        'Tiếng Việt giàu đẹp'
-                                    </a>
-                                </div>
-                            </div>
-                            <div className="row__item d-flex">
-                                <div className="row__item--img">
-                                    <img
-                                        data-src="../image/representative-agencies-overseas/chu-tich-quoc-hoi-siggapo-tham-viet-nam.jpg"
-                                        alt="Chủ tịch Quốc hội Singapore thăm Việt Nam: Cụ thể hóa những thỏa thuận cấp cao,.."
-                                        className="lazy"
-                                    />
-                                </div>
-                                <div className="row__item--title">
-                                    <a href="#">
-                                        Chủ tịch Quốc hội Singapore thăm Việt Nam: Cụ thể hóa những thỏa
-                                        thuận cấp cao,..
-                                    </a>
-                                </div>
-                            </div>
-                            <div className="row__item d-flex">
-                                <div className="row__item--img">
-                                    <img
-                                        data-src="../image/representative-agencies-overseas/tu-kolalata-nho-bac.jpg"
-                                        alt="Từ Kolkata nhớ Bác"
-                                        className="lazy"
-                                    />
-                                </div>
-                                <div className="row__item--title">
-                                    <a href="#">Từ Kolkata nhớ Bác</a>
-                                </div>
-                            </div>
-                            <div className="row__item d-flex">
-                                <div className="row__item--img">
-                                    <img
-                                        data-src="../image/representative-agencies-overseas/hinh-anh-viet-nam-o-nuoc-ngoai.jpg"
-                                        alt="Mỗi người Việt Nam ở nước ngoài là hình ảnh sống động nhất đại diện cho đất
-                            nước"
-                                        className="lazy"
-                                    />
-                                </div>
-                                <div className="row__item--title">
-                                    <a href="#">
-                                        Mỗi người Việt Nam ở nước ngoài là hình ảnh sống động nhất đại
-                                        diện cho đất nước
-                                    </a>
-                                </div>
-                            </div>
+                            ))}
                         </div>
                     </div>
                 </div>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import requestApi from '../../../../../helpers/api';
 
 function Nav() {
@@ -41,7 +41,7 @@ function Nav() {
     useEffect(() => {
         const fetchMenus = async () => {
             try {
-                const res = await requestApi('/categories/menu', 'GET'); // Gọi API danh mục
+                const res = await requestApi('/categories/get-category-with-children', 'GET'); // Gọi API danh mục
                 setMenus(res.data); // Lưu dữ liệu vào state
 
             } catch (error) {
@@ -67,6 +67,9 @@ function Nav() {
         };
         fetchCategories();
     }, []);
+
+
+    const navigate = useNavigate();
     return (
         <>
             <nav className="nav-desktop d-flex align-items-center">
@@ -79,7 +82,7 @@ function Nav() {
                             {categories.slice(0, 5).map((category, index) => (
                                 <li key={index}>
                                     <a>
-                                        <Link to={`/category/${category.slug || category.id}`}>
+                                        <Link to={`blogs/by-category/${category.id}`}>
                                             {category.name}
                                         </Link>
                                     </a>
@@ -112,18 +115,18 @@ function Nav() {
                     <div className="category__items d-flex">
                         {menu.map(menu => (
                             <ul key={menu.id}>
-                                <li className="category__items-title">{menu.name}</li>
+                                <li className="category__items-title" onClick={() => navigate(`/blogs/by-category/${menu.id}`)}>{menu.name}</li>
                                 {menu.children && menu.children.length > 0 && (
                                     menu.children.map(child => (
                                         <li key={child.id}>
-                                            <a href={`#category${child.id}`}>{child.name}</a>
-                                            {child.children && child.children.length > 0 && (
+                                            <a href={`blog/category${child.id}`}>{child.name}</a>
+                                            {/* {child.children && child.children.length > 0 && (
                                                 child.children.map(grandChild => (
                                                     <li key={grandChild.id}>
-                                                        <a href={`#category${grandChild.id}`}>{grandChild.name}</a>
+                                                        <a href={`blog/category/${grandChild.id}`}>{grandChild.name}</a>
                                                     </li>
                                                 ))
-                                            )}
+                                            )} */}
                                         </li>
                                     ))
                                 )}

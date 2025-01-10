@@ -32,11 +32,6 @@ export class BlogsController {
     return this.blogsService.findOne(+id);
   }
 
-  @Get('categoryId/:categoryId')
-  findBlogsByCategoryId(@Param('categoryId', ParseIntPipe) categoryId: number) {
-    return this.blogsService.findBlogsByCategoryId(categoryId);
-  }
-
   @Post()
   @UseInterceptors(
     FileInterceptor('image', {
@@ -90,5 +85,10 @@ export class BlogsController {
     return {
       url: `uploads/blog/content/${file.filename}`,
     };
+  }
+
+  @Get('/by-category/:categoryId')
+  async getBlogsByParentCategory(@Param('categoryId') categoryId: number) {
+    return this.blogsService.findBlogsByParentCategory(categoryId);
   }
 }

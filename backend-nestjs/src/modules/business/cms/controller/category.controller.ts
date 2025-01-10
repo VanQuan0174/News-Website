@@ -16,14 +16,14 @@ import { UpdateCategoryDto } from '../dto/category/update-category';
 @Public()
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
-  @Get('menu')
-  menu() {
-    return this.categoriesService.menu();
-  }
-
   @Get()
   findAll() {
     return this.categoriesService.findAll();
+  }
+
+  @Get('get-category-with-children')
+  getParentCategory() {
+    return this.categoriesService.getCategoriesWithChildren();
   }
 
   @Get(':id')

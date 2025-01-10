@@ -1217,7 +1217,7 @@ let CategoriesService = class CategoriesService {
     async findAll() {
         return await this.categotiesRepository.find();
     }
-    async menu() {
+    async getCategoriesWithChildren() {
         const categories = await this.categotiesRepository.find({
             relations: ['children'],
         });
@@ -1542,11 +1542,6 @@ let BlogsService = class BlogsService {
             where: { id: id },
         });
     }
-    async findBlogsByCategoryId(categoryId) {
-        return await this.blogsRepository.find({
-            where: { categoryId },
-        });
-    }
     async create(createBlogDto, tagIds) {
         const category = await this.categotiesRepository.findOne({
             where: { id: Number(createBlogDto.categoryId) },
@@ -1619,6 +1614,33 @@ let BlogsService = class BlogsService {
         }
         Object.assign(blog, updateBlogDto);
         return this.blogsRepository.save(blog);
+    }
+    async findCategoryWithChildren(categoryId) {
+        const categories = await this.categotiesRepository.find();
+        const categoryMap = new Map();
+        categories.forEach((category) => {
+            const parentId = category.parent_id || 0;
+            if (!categoryMap.has(parentId)) {
+                categoryMap.set(parentId, []);
+            }
+            categoryMap.get(parentId).push(category.id);
+        });
+        const findChildren = (id) => {
+            const children = categoryMap.get(id) || [];
+            return children.reduce((acc, childId) => {
+                return acc.concat(findChildren(childId));
+            }, children);
+        };
+        return [categoryId, ...findChildren(categoryId)];
+    }
+    async findBlogsByCategories(categoryIds) {
+        return this.blogsRepository.find({
+            where: { categoryId: (0, typeorm_2.In)(categoryIds) },
+        });
+    }
+    async findBlogsByParentCategory(parentCategoryId) {
+        const categoryIds = await this.findCategoryWithChildren(parentCategoryId);
+        return this.findBlogsByCategories(categoryIds);
     }
 };
 exports.BlogsService = BlogsService;
@@ -1810,11 +1832,11 @@ let CategoriesController = class CategoriesController {
     constructor(categoriesService) {
         this.categoriesService = categoriesService;
     }
-    menu() {
-        return this.categoriesService.menu();
-    }
     findAll() {
         return this.categoriesService.findAll();
+    }
+    getParentCategory() {
+        return this.categoriesService.getCategoriesWithChildren();
     }
     findOne(id) {
         return this.categoriesService.findOne(id);
@@ -1831,17 +1853,17 @@ let CategoriesController = class CategoriesController {
 };
 exports.CategoriesController = CategoriesController;
 __decorate([
-    (0, common_1.Get)('menu'),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
-], CategoriesController.prototype, "menu", null);
-__decorate([
     (0, common_1.Get)(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], CategoriesController.prototype, "findAll", null);
+__decorate([
+    (0, common_1.Get)('get-category-with-children'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], CategoriesController.prototype, "getParentCategory", null);
 __decorate([
     (0, common_1.Get)(':id'),
     __param(0, (0, common_1.Param)('id')),
@@ -1977,9 +1999,6 @@ let BlogsController = class BlogsController {
     findOne(id) {
         return this.blogsService.findOne(+id);
     }
-    findBlogsByCategoryId(categoryId) {
-        return this.blogsService.findBlogsByCategoryId(categoryId);
-    }
     async create(createBlogDto, tagIds, file) {
         if (file) {
             createBlogDto.image = file.filename;
@@ -1997,6 +2016,9 @@ let BlogsController = class BlogsController {
             url: `uploads/blog/content/${file.filename}`,
         };
     }
+    async getBlogsByParentCategory(categoryId) {
+        return this.blogsService.findBlogsByParentCategory(categoryId);
+    }
 };
 exports.BlogsController = BlogsController;
 __decorate([
@@ -2012,13 +2034,6 @@ __decorate([
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", void 0)
 ], BlogsController.prototype, "findOne", null);
-__decorate([
-    (0, common_1.Get)('categoryId/:categoryId'),
-    __param(0, (0, common_1.Param)('categoryId', common_1.ParseIntPipe)),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number]),
-    __metadata("design:returntype", void 0)
-], BlogsController.prototype, "findBlogsByCategoryId", null);
 __decorate([
     (0, common_1.Post)(),
     (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('image', {
@@ -2069,6 +2084,13 @@ __decorate([
     __metadata("design:paramtypes", [Object, typeof (_g = typeof Express !== "undefined" && (_f = Express.Multer) !== void 0 && _f.File) === "function" ? _g : Object]),
     __metadata("design:returntype", Promise)
 ], BlogsController.prototype, "createPostImage", null);
+__decorate([
+    (0, common_1.Get)('/by-category/:categoryId'),
+    __param(0, (0, common_1.Param)('categoryId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], BlogsController.prototype, "getBlogsByParentCategory", null);
 exports.BlogsController = BlogsController = __decorate([
     (0, common_1.Controller)('blogs'),
     (0, customize_1.Public)(),
@@ -2416,7 +2438,7 @@ module.exports = require("path");
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	(() => {
-/******/ 		__webpack_require__.h = () => ("51327c2cb4c4510685f6")
+/******/ 		__webpack_require__.h = () => ("f53ccdd279982caeb50d")
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */

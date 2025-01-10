@@ -227,6 +227,9 @@
   margin-right: 300px; /* Khoảng cách giữa các tiêu đề */
   white-space: nowrap; /* Giữ nội dung trên cùng một dòng */
 }
+.news-ticker__link {
+  width: 120px;
+}
 
 /* Keyframes để cuộn từ phải sang trái */
 @keyframes scroll-left {

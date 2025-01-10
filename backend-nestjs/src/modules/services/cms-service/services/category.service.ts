@@ -22,7 +22,7 @@ export class CategoriesService {
   }
 
   // Hàm lấy tất cả danh mục và xây dựng cấu trúc cây
-  async menu(): Promise<CategoryEntity[]> {
+  async getCategoriesWithChildren(): Promise<CategoryEntity[]> {
     // 1. Lấy tất cả danh mục từ cơ sở dữ liệu
     const categories = await this.categotiesRepository.find({
       relations: ['children'], // Đảm bảo lấy cả các danh mục con

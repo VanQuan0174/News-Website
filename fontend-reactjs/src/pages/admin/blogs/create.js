@@ -93,7 +93,7 @@ const CreateBlog = () => {
                 formData.append('image', newBlog.image);
             }
 
-            selectedTags.forEach(tagId => formData.append('tagIds', tagId));
+            selectedTags.forEach(tagId => formData.append('tagIds[]', tagId));
 
             await requestApi('/blogs', 'POST', formData, {
                 headers: {

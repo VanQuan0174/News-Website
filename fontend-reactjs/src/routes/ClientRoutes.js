@@ -6,6 +6,7 @@ import Stiemap from '../pages/client/stiemap/stiemap';
 import About from '../pages/client/about/about';
 import ClientLayout from '../components/client/layouts/Main';
 import DetailBlog from '../pages/client/blog/detailBlog';
+import ListBlog from '../pages/client/blog/ListBlog';
 
 const ClientRoutes = () => (
     <Routes>
@@ -15,6 +16,7 @@ const ClientRoutes = () => (
             <Route path="/sitemap" element={<Stiemap />} />
             <Route path="/about" element={<About />} />
             <Route path="/blog-detail/:id" element={< DetailBlog />} />
+            <Route path="/list-blog/category" element={< ListBlog />} />
         </Route>
     </Routes>
 );

@@ -4,7 +4,7 @@ import { CreateBlogDto } from '@/modules/business/cms/dto/blog/create-blog';
 import { UpdateBlogDto } from '@/modules/business/cms/dto/blog/update-blog';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { unlink } from 'fs/promises'; // Import phương thức để xóa file
 import { BlogTagEntity } from '@/database/entities/blog-tag.entity';
 import { TagEntity } from '@/database/entities/tag.entity';
@@ -34,11 +34,6 @@ export class BlogsService {
   async findOne(id: number): Promise<BlogEntity> {
     return await this.blogsRepository.findOne({
       where: { id: id },
-    });
-  }
-  async findBlogsByCategoryId(categoryId: number): Promise<BlogEntity[]> {
-    return await this.blogsRepository.find({
-      where: { categoryId },
     });
   }
 
@@ -154,5 +149,45 @@ export class BlogsService {
 
     Object.assign(blog, updateBlogDto);
     return this.blogsRepository.save(blog);
+  }
+
+  // Hàm lấy tất cả danh mục con (đệ quy nếu cần)
+  async findCategoryWithChildren(categoryId: number): Promise<number[]> {
+    const categories = await this.categotiesRepository.find();
+    const categoryMap = new Map<number, number[]>();
+
+    // Tạo danh sách danh mục cha-con
+    categories.forEach((category) => {
+      const parentId = category.parent_id || 0;
+      if (!categoryMap.has(parentId)) {
+        categoryMap.set(parentId, []);
+      }
+      categoryMap.get(parentId).push(category.id);
+    });
+
+    // Đệ quy tìm danh mục con
+    const findChildren = (id: number): number[] => {
+      const children = categoryMap.get(id) || [];
+      return children.reduce((acc, childId) => {
+        return acc.concat(findChildren(childId));
+      }, children);
+    };
+
+    return [categoryId, ...findChildren(categoryId)];
+  }
+
+  // Hàm lấy bài viết theo danh sách ID danh mục
+  async findBlogsByCategories(categoryIds: number[]): Promise<BlogEntity[]> {
+    return this.blogsRepository.find({
+      where: { categoryId: In(categoryIds) },
+    });
+  }
+
+  // Kết hợp: Lấy bài viết theo danh mục cha
+  async findBlogsByParentCategory(
+    parentCategoryId: number,
+  ): Promise<BlogEntity[]> {
+    const categoryIds = await this.findCategoryWithChildren(parentCategoryId);
+    return this.findBlogsByCategories(categoryIds);
   }
 }
