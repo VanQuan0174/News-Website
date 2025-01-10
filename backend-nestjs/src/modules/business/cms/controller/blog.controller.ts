@@ -6,6 +6,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Post,
   Put,
   UploadedFile,
@@ -29,6 +30,11 @@ export class BlogsController {
   @Get(':id')
   findOne(@Param('id') id: number) {
     return this.blogsService.findOne(+id);
+  }
+
+  @Get('categoryId/:categoryId')
+  findBlogsByCategoryId(@Param('categoryId', ParseIntPipe) categoryId: number) {
+    return this.blogsService.findBlogsByCategoryId(categoryId);
   }
 
   @Post()

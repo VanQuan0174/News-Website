@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
 import requestApi from "../../../helpers/api";
+import { useParams } from "react-router-dom";
 
 function DetailBlog() {
     const [blog, setBlog] = useState({});
+    const { id } = useParams(); // Lấy id từ URL
 
     useEffect(() => {
         const fetchDetailBlog = async () => {
             try {
-                const res = await requestApi(`/blogs/8`, 'GET'); // Gọi API với ID cố định
+                const res = await requestApi(`/blogs/${id}`, 'GET'); // Gọi API với id từ URL
                 setBlog(res.data); // Cập nhật state với dữ liệu từ API
             } catch (error) {
                 console.error('Lỗi khi lấy thông tin bài viết:', error);
@@ -15,8 +17,7 @@ function DetailBlog() {
         };
 
         fetchDetailBlog();
-    }, []); // Mảng phụ thuộc rỗng để useEffect chỉ chạy một lần
-
+    }, [id]); // Thêm id vào mảng phụ thuộc để useEffect chạy lại khi id thay đổi
     return (
         <main className="main d-flex">
             <section className="main__section--news-detail main-desktop__section d-flex ">
@@ -168,7 +169,7 @@ function DetailBlog() {
                     <div className="news-detail__right--sidebar-image">
                         <img
                             className="lazy"
-                            data-src="../image/news-detail/bua-liem-vang.jpg"
+                            data-src="http://localhost:8080/uploads/banners/bua-liem-vang.jpg"
                             alt="búa liềm vàng"
                         />
                     </div>

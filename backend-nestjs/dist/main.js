@@ -1542,6 +1542,11 @@ let BlogsService = class BlogsService {
             where: { id: id },
         });
     }
+    async findBlogsByCategoryId(categoryId) {
+        return await this.blogsRepository.find({
+            where: { categoryId },
+        });
+    }
     async create(createBlogDto, tagIds) {
         const category = await this.categotiesRepository.findOne({
             where: { id: Number(createBlogDto.categoryId) },
@@ -1972,6 +1977,9 @@ let BlogsController = class BlogsController {
     findOne(id) {
         return this.blogsService.findOne(+id);
     }
+    findBlogsByCategoryId(categoryId) {
+        return this.blogsService.findBlogsByCategoryId(categoryId);
+    }
     async create(createBlogDto, tagIds, file) {
         if (file) {
             createBlogDto.image = file.filename;
@@ -2004,6 +2012,13 @@ __decorate([
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", void 0)
 ], BlogsController.prototype, "findOne", null);
+__decorate([
+    (0, common_1.Get)('categoryId/:categoryId'),
+    __param(0, (0, common_1.Param)('categoryId', common_1.ParseIntPipe)),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", void 0)
+], BlogsController.prototype, "findBlogsByCategoryId", null);
 __decorate([
     (0, common_1.Post)(),
     (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('image', {
@@ -2401,7 +2416,7 @@ module.exports = require("path");
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	(() => {
-/******/ 		__webpack_require__.h = () => ("a9196c31582e7c0569f9")
+/******/ 		__webpack_require__.h = () => ("51327c2cb4c4510685f6")
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */

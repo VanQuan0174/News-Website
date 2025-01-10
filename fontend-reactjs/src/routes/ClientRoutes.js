@@ -14,7 +14,7 @@ const ClientRoutes = () => (
             <Route path="/contact" element={<Contact />} />
             <Route path="/sitemap" element={<Stiemap />} />
             <Route path="/about" element={<About />} />
-            <Route path="/blog-detail" element={< DetailBlog />} />
+            <Route path="/blog-detail/:id" element={< DetailBlog />} />
         </Route>
     </Routes>
 );
