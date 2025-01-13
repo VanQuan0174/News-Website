@@ -8,8 +8,10 @@ import Video from './components/Video';
 import Photo from './components/Photo';
 import MostViewed from './components/MostViewed';
 import NewsEvent from './components/NewsEvent';
-import HomeMenus from './components/HomeMenus';
+import HomeMenus from './components/partials/HomeMenus';
 import { Link } from 'react-router-dom';
+import RepresentativeAgencies from './components/RepresentativeAgencies';
+import IntegrationDevelopment from './components/IntegrationDevelopment';
 
 function Home() {
     const [menus, setMenus] = useState([]);
@@ -45,12 +47,17 @@ function Home() {
 
     // Lọc bài viết thuộc danh mục "HỘI NHẬP VÀ PHÁT TRIỂN"
     const integrationDevelopmentCategory = menus.find(menu => menu.name === "HỘI NHẬP VÀ PHÁT TRIỂN");
-    const filteredBlogs = blogs.filter(blog =>
+    const integrationDevelopment = blogs.filter(blog =>
         blog.categoryId === integrationDevelopmentCategory?.id
     );
     const representativeCategory = menus.find(menu => menu.name === "CƠ QUAN ĐẠI DIỆN VÀ KIỀU BÀO");
-    const filteredBlogss = blogs.filter(blog =>
+    const representative = blogs.filter(blog =>
         blog.categoryId === representativeCategory?.id
+    );
+
+    const newEventCategory = menus.find(menu => menu.name === "TIN TỨC - SỰ KIỆN");
+    const newEvent = blogs.filter(blog =>
+        blog.categoryId === newEventCategory?.id
     );
 
     return (
@@ -77,7 +84,7 @@ function Home() {
                             <i className="ti-arrow-right" />
                         </div>
                     </div>
-                    <NewsEvent />
+                    <NewsEvent blogs={newEvent} />
                 </div>
                 <div className="section__right d-flex">
                     <img
@@ -107,59 +114,7 @@ function Home() {
                     </div>
                 </div>
                 <div className="section__content d-flex">
-                    <div className="section__content d-flex">
-                        {filteredBlogs.slice(0, 2).map((blog, index) => (
-                            <div className="section__row" key={index}>
-                                <div className="section__article section__article--large">
-                                    <div className="section__article--img">
-                                        <Link to={`/blog-detail/${blog.id}`}>
-                                            <img
-                                                src={`${process.env.REACT_APP_UPLOAD_URL}/uploads/blog/${blog.image}`}
-                                                alt={blog.title}
-                                                className="lazy"
-                                            />
-                                        </Link>
-                                    </div>
-                                    <div className="section__article-title">
-                                        <Link to={`/blog-detail/${blog.id}`}>
-                                            {blog.title}
-                                        </Link>
-                                    </div>
-                                    <p className="section__article-summary text-medium color-dark-gray">
-                                        {blog.summary}
-                                    </p>
-                                </div>
-                            </div>
-                        ))}
-                        <div className="section__row section__row--3">
-                            <div className="section__row--content d-flex">
-                                <div className="row__item--top">
-                                    <img
-                                        data-src="http://localhost:8080/uploads/banners/van-kien-dai-hoi-8.jpg"
-                                        alt="Văn kiện đại hội lần thứ 8"
-                                        className="lazy"
-                                    />
-                                </div>
-                                {filteredBlogs.slice(2, 4).map((blog, index) => (
-                                    <div className="row__item d-flex">
-                                        <div className="row__item--img">
-                                            <img
-                                                src={`${process.env.REACT_APP_UPLOAD_URL}/uploads/blog/${blog.image}`}
-                                                alt="Nỗ lực tổ chức an toàn lễ hội Việt Nam tại Nhật Bản lần 14"
-                                                className="lazy"
-                                            />
-                                        </div>
-                                        <div className="row__item--title">
-                                            <Link to={`/blog-detail/${blog.id}`}>
-                                                {blog.title}
-                                            </Link>
-                                        </div>
-                                    </div>
-                                ))}
-
-                            </div>
-                        </div>
-                    </div>
+                    <IntegrationDevelopment blogs={integrationDevelopment} />
                 </div>
             </section>
 
@@ -184,51 +139,7 @@ function Home() {
                     </div>
                 </div>
                 <div className="section__content d-flex">
-                    {filteredBlogss.slice(0, 2).map((blog, index) => (
-                        <div className="section__row" key={index}>
-                            <div className="section__article section__article--large">
-                                <div className="section__article--img">
-                                    <Link to={`/blog-detail/${blog.id}`}>
-                                        <img
-                                            src={`${process.env.REACT_APP_UPLOAD_URL}/uploads/blog/${blog.image}`}
-                                            alt={blog.title}
-                                            className="lazy"
-                                        />
-                                    </Link>
-                                </div>
-                                <div className="section__article-title">
-                                    <Link to={`/blog-detail/${blog.id}`}>
-                                        {blog.title}
-                                    </Link>
-                                </div>
-                                <p className="section__article-summary text-medium color-dark-gray">
-                                    {blog.summary}
-                                </p>
-                            </div>
-                        </div>
-                    ))}
-                    <div className="section__row section__row--3">
-                        <div className="section__row--content d-flex">
-                            {filteredBlogss.slice(2, 6).map((blog, index) => (
-                                <div className="row__item d-flex">
-                                    <div className="row__item--img">
-                                        <Link to={`/blog-detail/${blog.id}`}>
-                                            <img
-                                                src={`${process.env.REACT_APP_UPLOAD_URL}/uploads/blog/${blog.image}`}
-                                                alt={blog.title}
-                                                className="lazy"
-                                            />
-                                        </Link>
-                                    </div>
-                                    <div className="row__item--title">
-                                        <Link to={`/blog-detail/${blog.id}`}>
-                                            {blog.title}
-                                        </Link>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
+                    <RepresentativeAgencies blogs={representative} />
                 </div>
             </section>
 
