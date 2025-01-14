@@ -82,7 +82,7 @@ function Nav() {
                             {categories.slice(0, 5).map((category, index) => (
                                 <li key={index}>
                                     <a>
-                                        <Link to={`blogs/by-category/${category.id}`}>
+                                        <Link to={`list-blog/category/${category.id}`}>
                                             {category.name}
                                         </Link>
                                     </a>
@@ -115,18 +115,11 @@ function Nav() {
                     <div className="category__items d-flex">
                         {menu.map(menu => (
                             <ul key={menu.id}>
-                                <li className="category__items-title" onClick={() => navigate(`/blogs/by-category/${menu.id}`)}>{menu.name}</li>
+                                <li className="category__items-title" onClick={() => navigate(`list-blog/category/${menu.id}`)}>{menu.name}</li>
                                 {menu.children && menu.children.length > 0 && (
                                     menu.children.map(child => (
                                         <li key={child.id}>
-                                            <a href={`blog/category${child.id}`}>{child.name}</a>
-                                            {/* {child.children && child.children.length > 0 && (
-                                                child.children.map(grandChild => (
-                                                    <li key={grandChild.id}>
-                                                        <a href={`blog/category/${grandChild.id}`}>{grandChild.name}</a>
-                                                    </li>
-                                                ))
-                                            )} */}
+                                            <a href={`list-blog/category/${child.id}`}>{child.name}</a>
                                         </li>
                                     ))
                                 )}

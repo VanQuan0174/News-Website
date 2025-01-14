@@ -16,7 +16,7 @@ const ClientRoutes = () => (
             <Route path="/sitemap" element={<Stiemap />} />
             <Route path="/about" element={<About />} />
             <Route path="/blog-detail/:id" element={< DetailBlog />} />
-            <Route path="/list-blog/category" element={< ListBlog />} />
+            <Route path="/list-blog/category/:id" element={< ListBlog />} />
         </Route>
     </Routes>
 );

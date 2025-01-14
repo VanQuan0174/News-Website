@@ -1,4 +1,28 @@
+import React, { useState, useEffect } from 'react';
+import { useParams } from "react-router-dom";
+import requestApi from "../../../helpers/api";
+import BlogCardSmall from "../home/components/partials/BlogCardSmall";
+
 const ListBlog = () => {
+    const [blogs, setBlogs] = useState([]);  // Dữ liệu bài viết
+    const { id } = useParams();  // Lấy id từ URL
+
+    useEffect(() => {
+        const fetchBlogs = async () => {
+            try {
+                // Gọi API để lấy danh sách bài viết theo category id
+                const res = await requestApi(`/blogs/by-category/${id}`, 'GET');
+                setBlogs(res.data);  // Cập nhật state với dữ liệu trả về
+            } catch (error) {
+                console.error('Lỗi khi lấy danh sách bài viết hoặc danh mục', error);
+            }
+        };
+
+        fetchBlogs();
+    }, [id]);  // Chạy lại khi `id` thay đổi
+
+    const smallBlogs = blogs.slice(2, 6); // Lấy 4 blog tiếp theo
+
     return (
         <main className="main d-flex">
             <section className="main__section--news-detail main-desktop__section d-flex ">
@@ -301,74 +325,9 @@ const ListBlog = () => {
                             </div>
                         </div>
                         <div className="sidebar-content d-flex">
-                            <div className="item d-flex">
-                                <div className="item-image">
-                                    <img
-                                        className="lazy"
-                                        data-src="../image/news-list/viet-nam-tai-nhat.jpg"
-                                        alt="Nỗ lực tổ chức an toàn lễ hội Việt Nam tại Nhậ"
-                                    />
-                                </div>
-                                <div className="item-text">
-                                    <h4>
-                                        Nỗ lực tổ chức an toàn lễ hội Việt Nam tại Nhật Bản lần 14
-                                    </h4>
-                                </div>
-                            </div>
-                            <div className="item d-flex">
-                                <div className="item-image">
-                                    <img
-                                        className="lazy"
-                                        data-src="../image/news-list/wb-con-bo-bao-cao.jpg"
-                                        alt="WB công bố báo cáo cập nhật đánh giá quốc gia năm 2021"
-                                    />
-                                </div>
-                                <div className="item-text">
-                                    <h4>WB công bố báo cáo cập nhật đánh giá quốc gia năm 2021</h4>
-                                </div>
-                            </div>
-                            <div className="item d-flex">
-                                <div className="item-image">
-                                    <img
-                                        className="lazy"
-                                        data-src="../image/news-list/nguoi-truyen-cam-hung.jpg"
-                                        alt="Bác Hồ"
-                                    />
-                                </div>
-                                <div className="item-text">
-                                    <h4>Bác Hồ, người truyền cho tôi cảm hứng trong cuộc sống'</h4>
-                                </div>
-                            </div>
-                            <div className="item d-flex">
-                                <div className="item-image">
-                                    <img
-                                        className="lazy"
-                                        data-src="../image/news-list/viet-nam-asean.jpg"
-                                        alt="Việt Nam đóng vai trò chủ chốt trong định hình quan hệ Hoa Kỳ-ASEAN"
-                                    />
-                                </div>
-                                <div className="item-text">
-                                    <h4>
-                                        Báo chí quốc tế: Việt Nam đóng vai trò chủ chốt trong định hình
-                                        quan hệ Hoa Kỳ-ASEAN
-                                    </h4>
-                                </div>
-                            </div>
-                            <div className="item d-flex">
-                                <div className="item-image">
-                                    <img
-                                        className="lazy"
-                                        data-src="../image/news-list/chu-tich-quoc-hoi-siggapo-tham-viet-nam.jpg"
-                                        alt="Chủ tịch Quốc hội Singapore"
-                                    />
-                                </div>
-                                <div className="item-text">
-                                    <h4>
-                                        Chủ tịch Quốc hội Singapore thăm Việt Nam: Cụ thể hóa những thỏa
-                                        thuận cấp cao,..
-                                    </h4>
-                                </div>
-                            </div>
+                            {smallBlogs.map((blog, index) => (
+                                <BlogCardSmall blog={blog} key={index} />
+                            ))}
                         </div>
                     </div>
                     <div className="sidebar-row d-flex">

@@ -68,10 +68,10 @@ function Home() {
 
             <section className="main__section--banner d-flex">
                 <div className="banner__left">
-                    <img data-src="http://localhost:8080/uploads/banners/banner-left.jpg" className="lazy" />
+                    <img src="http://localhost:8080/uploads/banners/banner-left.jpg" />
                 </div>
                 <div className="banner__right">
-                    <img data-src="http://localhost:8080/uploads/banners/banner-right.jpg" className="lazy" />
+                    <img src="http://localhost:8080/uploads/banners/banner-right.jpg" />
                 </div>
             </section>
 
@@ -88,20 +88,20 @@ function Home() {
                 </div>
                 <div className="section__right d-flex">
                     <img
-                        className="lazy"
-                        data-src="http://localhost:8080/uploads/banners/cong-dich-vu-quoc-gia.png"
+
+                        src="http://localhost:8080/uploads/banners/cong-dich-vu-quoc-gia.png"
                     />
                     <img
-                        className="lazy"
-                        data-src="http://localhost:8080/uploads/banners/bien-dao-viet-nam.png"
+
+                        src="http://localhost:8080/uploads/banners/bien-dao-viet-nam.png"
                     />
-                    <img className="lazy" data-src="http://localhost:8080/uploads/banners/t63-tinh-thanh.png" />
-                    <img className="lazy" data-src="http://localhost:8080/uploads/banners/chuyen-doi-ip6.png" />
+                    <img src="http://localhost:8080/uploads/banners/t63-tinh-thanh.png" />
+                    <img src="http://localhost:8080/uploads/banners/chuyen-doi-ip6.png" />
                     <img
-                        className="lazy"
-                        data-src="http://localhost:8080/uploads/banners/co-so-du-lieu-quoc-gia.png"
+
+                        src="http://localhost:8080/uploads/banners/co-so-du-lieu-quoc-gia.png"
                     />
-                    <img className="lazy" data-src="http://localhost:8080/uploads/banners/pc-covi.png" />
+                    <img src="http://localhost:8080/uploads/banners/pc-covi.png" />
                 </div>
             </section>
 
@@ -120,12 +120,12 @@ function Home() {
 
             <section className="main__section--banner d-flex">
                 <div className="banner__left">
-                    <img data-src="http://localhost:8080/uploads/banners/vinh-phuc-70-nam.jpg" className="lazy" />
+                    <img src="http://localhost:8080/uploads/banners/vinh-phuc-70-nam.jpg" />
                 </div>
                 <div className="banner__right">
                     <img
-                        data-src="http://localhost:8080/uploads/banners/bao-hien-y-te-xa-hoi.jpg"
-                        className="lazy"
+                        src="http://localhost:8080/uploads/banners/bao-hien-y-te-xa-hoi.jpg"
+
                     />
                 </div>
             </section>
@@ -145,7 +145,7 @@ function Home() {
 
             <section className="main__section--banner ">
                 <div className="banner__img">
-                    <img data-src="http://localhost:8080/uploads/banners/banner-2.jpg" className="lazy" />
+                    <img src="http://localhost:8080/uploads/banners/banner-2.jpg" />
                 </div>
             </section>
 
