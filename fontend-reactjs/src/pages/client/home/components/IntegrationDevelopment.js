@@ -20,9 +20,8 @@ const IntegrationDevelopment = ({ blogs }) => {
                 <div class="section__row--content d-flex">
                     <div className="row__item--top">
                         <img
-                            data-src="http://localhost:8080/uploads/banners/van-kien-dai-hoi-8.jpg"
+                            src="http://localhost:8080/uploads/banners/van-kien-dai-hoi-8.jpg"
                             alt="Văn kiện đại hội lần thứ 8"
-                            className="lazy"
                         />
                     </div>
 

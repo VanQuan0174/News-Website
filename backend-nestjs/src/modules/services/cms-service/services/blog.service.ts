@@ -151,6 +151,15 @@ export class BlogsService {
     return this.blogsRepository.save(blog);
   }
 
+  async findBlogsByCategory (categoryId: number): Promise<BlogEntity[]> {
+    return this.blogsRepository.find({
+      where: { categoryId: categoryId },
+      order: {
+        priority: 'ASC',
+      },
+    });
+  }
+
   // Hàm lấy tất cả danh mục con (đệ quy nếu cần)
   async findCategoryWithChildren(categoryId: number): Promise<number[]> {
     const categories = await this.categotiesRepository.find();
@@ -180,6 +189,9 @@ export class BlogsService {
   async findBlogsByCategories(categoryIds: number[]): Promise<BlogEntity[]> {
     return this.blogsRepository.find({
       where: { categoryId: In(categoryIds) },
+      order: {
+        priority: 'ASC',
+      },
     });
   }
 

@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import requestApi from "../../../helpers/api";
 import BlogCardSmall from "../home/components/partials/BlogCardSmall";
 
 const ListBlog = () => {
     const [blogs, setBlogs] = useState([]);  // Dữ liệu bài viết
-    const { id } = useParams();  // Lấy id từ URL
+    const { idCategory } = useParams();
 
     useEffect(() => {
         const fetchBlogs = async () => {
             try {
                 // Gọi API để lấy danh sách bài viết theo category id
-                const res = await requestApi(`/blogs/by-category/${id}`, 'GET');
+                const res = await requestApi(`/blogs/by-categoryId/${idCategory}`, 'GET');
                 setBlogs(res.data);  // Cập nhật state với dữ liệu trả về
             } catch (error) {
                 console.error('Lỗi khi lấy danh sách bài viết hoặc danh mục', error);
@@ -19,9 +19,13 @@ const ListBlog = () => {
         };
 
         fetchBlogs();
-    }, [id]);  // Chạy lại khi `id` thay đổi
+    }, idCategory);
 
-    const smallBlogs = blogs.slice(2, 6); // Lấy 4 blog tiếp theo
+    const smallBlogs = blogs.slice(0, 6); // Lấy 4 blog tiếp theo
+    const listBlogs = blogs.slice(0, 6); // Lấy 4 blog tiếp theo
+
+    const mainBlog = blogs.slice(0, 1) // Bài viết chính (trái)
+    const sideBlogs = blogs.slice(1, 3); // Hai bài viết phụ (phải)
 
     return (
         <main className="main d-flex">
@@ -45,78 +49,64 @@ const ListBlog = () => {
                             </ul>
                         </div>
                     </div>
+
                     <div className="news-list__latest d-flex">
-                        <div className="news-list__latest--left d-flex">
-                            <div className="latest__left--img">
-                                <img
-                                    className="lazy"
-                                    data-src="../image/news-list/image.png"
-                                    alt=" Chủ tịch Hồ Chí Minh: 'Người là tình yêu thiết tha nhất...'"
-                                />
+                        {mainBlog.map((blog) => (
+                            <div className="news-list__latest--left d-flex">
+                                <div className="latest__left--img">
+                                    <img
+                                        className="lazy"
+                                        src={`${process.env.REACT_APP_UPLOAD_URL}/uploads/blog/${blog.image}`}
+                                        alt={blog.title}
+                                    />
+                                </div>
+                                <a className="latest__left--title" href="#">
+                                    {blog.title}
+                                </a>
+                                <div className="latest__left--description">{blog.summary}</div>
                             </div>
-                            <a className="latest__left--title" href="news-detail.html">
-                                132 năm Ngày sinh Chủ tịch Hồ Chí Minh: 'Người là tình yêu thiết tha
-                                nhất...'
-                            </a>
-                            <div className="latest__left--description">
-                                (TTĐN) - “Bác Hồ, Người là tình yêu thiết tha nhất, trong lòng dân
-                                và trong trái tim nhân loại”. Lời thơ, lời ca ấy đã phần nào nói lên
-                                được mối liên hệ kỳ diệu giữa Chủ tịch Hồ Chí Minh và tình yêu
-                                thương, niềm tự hào của nhân dân Việt Nam và của nhân loại tiến bộ.
-                            </div>
-                        </div>
+                        ))}
                         <div className="news-list__latest--right d-flex">
-                            <div className="latest__right--row d-flex">
-                                <div className="latest__right--image">
-                                    <img
-                                        className="lazy"
-                                        data-src="../image/news-list/DNdao-tao-nghe.jpg"
-                                        alt="triển khai Nghị quyết 06-NQ/TW của Bộ
-                          Chính trị"
-                                    />
+                            {sideBlogs.map((blog) => (
+                                <div className="latest__right--row d-flex">
+                                    <div className="latest__right--image">
+                                        <img
+                                            className="lazy"
+                                            src={`${process.env.REACT_APP_UPLOAD_URL}/uploads/blog/${blog.image}`}
+                                            alt={blog.title}
+                                        />
+                                    </div>
+                                    <a href="#" className="latest__right--title">
+                                        {blog.title}
+                                    </a>
                                 </div>
-                                <a href="#" className="latest__right--title">
-                                    Quán triệt, triển khai Nghị quyết 06-NQ/TW của Bộ Chính trị
-                                </a>
-                            </div>
-                            <div className="latest__right--row d-flex">
-                                <div className="latest__right--image">
-                                    <img
-                                        className="lazy"
-                                        data-src="../image/news-list/hop-quoc-hoi.png"
-                                        alt=">Việt Nam đặt mục tiêu đến 2025"
-                                    />
-                                </div>
-                                <a href="#" className="latest__right--title">
-                                    Việt Nam đặt mục tiêu đến 2025 có ít nhất 25 DNNN vốn hóa hơn 1 tỷ
-                                    USD
-                                </a>
-                            </div>
+                            ))}
                         </div>
                     </div>
                     <div className="news-detail__content  news-list__content d-flex">
-                        <div className="news-list__content--row d-flex">
-                            <a href="#" className="row__title">
-                                Bình đẳng giới giúp cải thiện năng suất cho ngành dệt may và da giày
-                            </a>
-                            <div className="row__content d-flex">
-                                <div className="row__content--img">
-                                    <img
-                                        className="lazy"
-                                        data-src="../image/news-list/image-1.jpg"
-                                        alt=" Trao quyền cho phụ nữ có thể giúp ngành dệt may, da giày Việt Nam"
-                                    />
+                        {listBlogs.map((blog) => (
+                            <div className="news-list__content--row d-flex">
+                                <a href="#" className="row__title">
+                                    {blog.title}
+                                </a>
+                                <div className="row__content d-flex">
+                                    <div className="row__content--img">
+                                        <Link to={`/blog-detail/${blog.id}`}>
+                                            <img
+                                                src={`${process.env.REACT_APP_UPLOAD_URL}/uploads/blog/${blog.image}`}
+                                                alt={blog.title}
+                                                className="lazy"
+                                            />
+                                        </Link>
+                                    </div>
+                                    <div className="row__content--description">
+                                        {blog.summary}
+                                    </div>
                                 </div>
-                                <div className="row__content--description">
-                                    (TTĐN) - Trao quyền cho phụ nữ có thể giúp ngành dệt may, da giày
-                                    Việt Nam phục hồi và phát triển mạnh mẽ hơn sau đại dịch COVID-19.
-                                    Điều này đã được chứng minh từ thực tế của một chương trình của
-                                    ILO.
-                                </div>
+                                <div className="line" />
                             </div>
-                            <div className="line" />
-                        </div>
-                        <div className="news-list__content--row d-flex">
+                        ))}
+                        {/* <div className="news-list__content--row d-flex">
                             <a href="#" className="row__title">
                                 Theo dấu chân thủa niên thiếu của Người ở xứ Huế
                             </a>
@@ -307,7 +297,7 @@ const ListBlog = () => {
                                 </div>
                             </div>
                             <div className="line" />
-                        </div>
+                        </div> */}
                     </div>
                 </div>
                 <div className="news-detail__right">
@@ -321,7 +311,7 @@ const ListBlog = () => {
                     <div className="sidebar-row d-flex">
                         <div className="sidebar-heading">
                             <div className="text-heading">
-                                <a href="#">MỚI NHẤT</a>
+                                <a href="#">TIN TỨC MỚI</a>
                             </div>
                         </div>
                         <div className="sidebar-content d-flex">
@@ -330,51 +320,7 @@ const ListBlog = () => {
                             ))}
                         </div>
                     </div>
-                    <div className="sidebar-row d-flex">
-                        <div className="sidebar-heading">
-                            <div className="text-heading">
-                                <a href="#">VIDEO</a>
-                            </div>
-                        </div>
-                        <div className="sidebar-content d-flex">
-                            <div className="sidebar-content__video">
-                                <video
-                                    src=""
-                                    poster="../image/news-list/cuoc-thi-bien-cuong-to-quoc.jpg"
-                                    alt="Cuộc thi Biên cương Tổ quốc tôi"
-                                />
-                            </div>
-                            <div className="sidebar-content__title">
-                                <h4>Cuộc thi Biên cương Tổ quốc tôi</h4>
-                            </div>
-                            <div className="item d-flex">
-                                <div className="item-video">
-                                    <video
-                                        src=""
-                                        poster="../image/news-list/viet-nam-tai-nhat.jpg"
-                                        alt="Cuộc thi Biên cương Tổ quốc tôi"
-                                    />
-                                </div>
-                                <div className="item-text">
-                                    <h4>
-                                        Nỗ lực tổ chức an toàn lễ hội Việt Nam tại Nhật Bản lần 14
-                                    </h4>
-                                </div>
-                            </div>
-                            <div className="item d-flex">
-                                <div className="item-video">
-                                    <video
-                                        src=""
-                                        poster="../image/news-list/wb-con-bo-bao-cao.jpg"
-                                        alt="Cuộc thi Biên cương Tổ quốc tôi"
-                                    />
-                                </div>
-                                <div className="item-text">
-                                    <h4>WB công bố báo cáo cập nhật đánh giá quốc gia năm 2021</h4>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+
                     <div className="sidebar-row d-flex">
                         <div className="sidebar-heading">
                             <div className="text-heading">

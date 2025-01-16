@@ -86,9 +86,15 @@ export class BlogsController {
       url: `uploads/blog/content/${file.filename}`,
     };
   }
-
-  @Get('/by-category/:categoryId')
+  // lấy tất cả bài viết có chung danh muc cha
+  @Get('/by-parentCategory/:categoryId')
   async getBlogsByParentCategory(@Param('categoryId') categoryId: number) {
     return this.blogsService.findBlogsByParentCategory(categoryId);
+  }
+
+  // lấy theo idCateogry
+  @Get('/by-categoryId/:categoryId')
+  async getBlogsByCategory(@Param('categoryId') categoryId: number) {
+    return this.blogsService.findBlogsByCategory(categoryId);
   }
 }

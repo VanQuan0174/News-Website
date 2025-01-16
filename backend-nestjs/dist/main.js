@@ -1615,6 +1615,14 @@ let BlogsService = class BlogsService {
         Object.assign(blog, updateBlogDto);
         return this.blogsRepository.save(blog);
     }
+    async findBlogsByCategory(categoryId) {
+        return this.blogsRepository.find({
+            where: { categoryId: categoryId },
+            order: {
+                priority: 'ASC',
+            },
+        });
+    }
     async findCategoryWithChildren(categoryId) {
         const categories = await this.categotiesRepository.find();
         const categoryMap = new Map();
@@ -1636,6 +1644,9 @@ let BlogsService = class BlogsService {
     async findBlogsByCategories(categoryIds) {
         return this.blogsRepository.find({
             where: { categoryId: (0, typeorm_2.In)(categoryIds) },
+            order: {
+                priority: 'ASC',
+            },
         });
     }
     async findBlogsByParentCategory(parentCategoryId) {
@@ -2019,6 +2030,9 @@ let BlogsController = class BlogsController {
     async getBlogsByParentCategory(categoryId) {
         return this.blogsService.findBlogsByParentCategory(categoryId);
     }
+    async getBlogsByCategory(categoryId) {
+        return this.blogsService.findBlogsByCategory(categoryId);
+    }
 };
 exports.BlogsController = BlogsController;
 __decorate([
@@ -2085,12 +2099,19 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], BlogsController.prototype, "createPostImage", null);
 __decorate([
-    (0, common_1.Get)('/by-category/:categoryId'),
+    (0, common_1.Get)('/by-parentCategory/:categoryId'),
     __param(0, (0, common_1.Param)('categoryId')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
 ], BlogsController.prototype, "getBlogsByParentCategory", null);
+__decorate([
+    (0, common_1.Get)('/by-categoryId/:categoryId'),
+    __param(0, (0, common_1.Param)('categoryId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], BlogsController.prototype, "getBlogsByCategory", null);
 exports.BlogsController = BlogsController = __decorate([
     (0, common_1.Controller)('blogs'),
     (0, customize_1.Public)(),
@@ -2438,7 +2459,7 @@ module.exports = require("path");
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	(() => {
-/******/ 		__webpack_require__.h = () => ("2bfb8405aa8ead94a1d7")
+/******/ 		__webpack_require__.h = () => ("3eb446eb3b35bfd20515")
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */

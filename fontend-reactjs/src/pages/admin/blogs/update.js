@@ -104,7 +104,7 @@ const UpdateBlog = () => {
                         editor={ClassicEditor}
                         data={blog.content}
                         config={{
-                            licenseKey: "eyJhbGciOiJFUzI1NiJ9.eyJleHAiOjE3MzY4MTI3OTksImp0aSI6ImQ1OWI5NzI2LTk1OWEtNDM0Ny1hNzFjLTY4NTFiMzBlZjdhOCIsInVzYWdlRW5kcG9pbnQiOiJodHRwczovL3Byb3h5LWV2ZW50LmNrZWRpdG9yLmNvbSIsImRpc3RyaWJ1dGlvbkNoYW5uZWwiOlsiY2xvdWQiLCJkcnVwYWwiLCJzaCJdLCJ3aGl0ZUxhYmVsIjp0cnVlLCJsaWNlbnNlVHlwZSI6InRyaWFsIiwiZmVhdHVyZXMiOlsiKiJdLCJ2YyI6Ijk5MzlhNDhjIn0.uIAWOhaLBa8QSFfO3QiHtTScndTl0lgfZQfyJobTg9s3qgsTd8qOGx1mTeSK_rxwuWXYQAgI5OOIDVVLpd9lSA",
+                            licenseKey: "eyJhbGciOiJFUzI1NiJ9.eyJleHAiOjE3MzgyODE1OTksImp0aSI6IjM3MTZhODc4LWY4NGQtNGVkNS04YTY1LWMzMjkwYTdhZDgyOCIsInVzYWdlRW5kcG9pbnQiOiJodHRwczovL3Byb3h5LWV2ZW50LmNrZWRpdG9yLmNvbSIsImRpc3RyaWJ1dGlvbkNoYW5uZWwiOlsiY2xvdWQiLCJkcnVwYWwiLCJzaCJdLCJ3aGl0ZUxhYmVsIjp0cnVlLCJsaWNlbnNlVHlwZSI6InRyaWFsIiwiZmVhdHVyZXMiOlsiKiJdLCJ2YyI6ImJkZjM1Y2Q3In0.i3O5wuPyWszwqxPhTQ_YFB38GBQ3DB9LvVFHB6bGV4Y03mGn9mLvhgumqFL-xc7ZYQd1D-SGd1Fjb7e-hBGC_A",
                             extraPlugins: [uploadPlugin],
                         }}
                         onChange={(event, editor) => {

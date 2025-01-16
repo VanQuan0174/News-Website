@@ -54,8 +54,8 @@ function Nav() {
 
     // danh mục
 
-    const [categories, setCategories] = useState([]); // State lưu danh sách sản phẩm
-    // Hàm lấy danh sách sản phẩm
+    const [categories, setCategories] = useState([]); // State lưu danh sách
+    // Hàm lấy danh sách 
     useEffect(() => {
         const fetchCategories = async () => {
             try {
@@ -119,7 +119,7 @@ function Nav() {
                                 {menu.children && menu.children.length > 0 && (
                                     menu.children.map(child => (
                                         <li key={child.id}>
-                                            <a href={`list-blog/category/${child.id}`}>{child.name}</a>
+                                            <a href={`/list-blog/category/${child.id}`}>{child.name}</a>
                                         </li>
                                     ))
                                 )}
